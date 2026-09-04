@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Local KB",
+  "version": "0.1.0",
+  "identifier": "com.local-kb.prototype",
+  "build": {
+    "beforeDevCommand": "npm.cmd run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm.cmd run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [{
+      "title": "证券端侧本地知识库",
+      "width": 1280,
+      "height": 820,
+      "minWidth": 960,
+      "minHeight": 640
+    }],
+    "security": { "csp": null }
+  },
+  "bundle": { "active": false, "targets": "all" }
+}
+

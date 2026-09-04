@@ -1,0 +1,1740 @@
+# 历史原始资料：其中的目录与命令可能已经过时，当前安装和启动方式请以仓库根目录 README.md 为准。
+
+# 证券 PC 端侧轻量化本地知识库 Demo —— 完整项目构建需求
+
+你现在需要从零设计并实现一个：
+
+“证券 PC 端侧轻量化本地知识库原型 Demo”。
+
+项目目录：
+
+D:\Workspace\local-kb
+
+请完整阅读本需求和另外提供的《Codex 项目构建前环境说明》。
+
+==================================================
+一、课题背景
+==================================================
+
+证券投研、交易业务需查阅海量金融文档。
+
+云端知识库存在：
+
+数据合规风险
+敏感资料上传风险
+网络依赖
+离线不可用
+
+等问题。
+
+端侧轻量化向量技术逐步成熟，
+
+本地 PC 离线知识库可以实现：
+
+敏感金融数据终端闭环存储
+
+但证券公司 PC 端知识库在：
+
+框架选型
+轻量化部署
+增量更新
+离线业务适配
+低配置 PC 适配
+Embedding 模型适配
+
+等方面缺少落地参考。
+
+本课题：
+
+以调研研究为核心，
+
+辅以简易实践验证，
+
+探明：
+
+Tauri + Rust
+
+端侧知识库技术路线的落地可行性，
+
+为公司未来 PC 端离线智能金融应用提供技术依据。
+
+==================================================
+二、课题正式研究方向
+==================================================
+
+1. 端侧技术栈调研评估
+
+调研：
+
+Tauri + Rust
+
+轻量 Embedding
+
+嵌入式 Vector DB
+
+SQLite / sqlite-vec
+
+等方案的：
+
+性能
+资源开销
+兼容性
+适用场景。
+
+同时考虑：
+
+金融端侧数据合规。
+
+2. 证券业务需求梳理
+
+围绕：
+
+行情
+投研
+交易
+
+等场景，
+
+梳理：
+
+本地文档管理
+离线检索
+资料问答
+
+核心需求。
+
+本期 Demo 不接结构化行情数据库。
+
+3. 轻量化流程设计与验证
+
+验证：
+
+文档管理
+Chunk
+Embedding 接口
+Vector 存储
+语义检索
+文件监听
+增量更新
+本地数据闭环
+简单 RAG
+
+的可行性。
+
+==================================================
+三、正式课题交付物
+==================================================
+
+最终课题目标包括：
+
+1. 端侧知识库技术选型对比分析报告；
+2. 证券业务需求梳理 + 整体落地方案；
+3. 可运行离线简易 Demo；
+4. 合规优化及后续对接苍穹 AI 建议。
+
+当前 Codex 的主要任务：
+
+完成第 3 项的软件原型，
+
+并为其他报告提供：
+
+架构
+接口
+Benchmark
+运行结果
+
+技术基础。
+
+==================================================
+四、三人项目分工
+==================================================
+
+当前小组共 3 人。
+
+------------------------------
+成员 1：框架负责人
+------------------------------
+
+主要负责：
+
+Tauri 前端
+
+Rust 后端
+
+SQLite
+
+VectorStore
+
+本地知识库
+
+Document / Chunk 生命周期
+
+文件监听
+
+增量更新
+
+Embedding 对接协议
+
+接收 Vector
+
+Vector 存入 SQLite
+
+Vector Retrieval
+
+简单 RAG
+
+外部 LLM 调用
+
+未来 Tool 接口
+
+项目总体整合。
+
+Codex 当前主要为成员 1 构建框架。
+
+------------------------------
+成员 2：Embedding 负责人
+------------------------------
+
+后续负责：
+
+寻找不同轻量 Embedding 模型
+
+评估不同模型
+
+模型本地 CPU 部署
+
+Tokenizer
+
+Pooling
+
+Normalize
+
+模型量化
+
+模型输入输出
+
+生成 Embedding Vector
+
+把模型适配到本项目。
+
+Codex 当前：
+
+不要替成员 2 实现真实模型。
+
+只需要提供非常完整：
+
+Embedding 接入接口和文档。
+
+------------------------------
+成员 3：性能验证负责人
+------------------------------
+
+负责：
+
+CPU-only 性能测试
+
+不同 PC 配置
+
+模型加载时间
+
+Embedding 吞吐
+
+Vector Insert
+
+Vector Search
+
+内存
+
+CPU
+
+增量更新性能
+
+检索效果统计。
+
+Codex 必须提供：
+
+可重复测试入口。
+
+==================================================
+五、项目本期边界
+==================================================
+
+本期真正实现：
+
+Tauri
+Rust
+SQLite
+VectorStore
+Document 管理
+Chunk
+Vector 接收
+Vector 存储
+Vector Search
+Mock Embedding
+Embedding Adapter
+文件监听
+增量更新
+前端页面
+简单 LLM Client
+简单 RAG
+测试接口
+Benchmark 接口
+完整文档。
+
+不要实现：
+
+真实 Embedding 模型。
+
+不要实现：
+
+Text-to-SQL
+
+行情数据库
+
+结构化指标 Agent
+
+StarRocks
+
+OceanBase
+
+复杂 Agent
+
+Multi-Agent
+
+LangGraph
+
+LangChain
+
+MCP Server
+
+Web Search
+
+复杂 Reranker
+
+复杂 Hybrid Search
+
+企业权限体系。
+
+==================================================
+六、最重要架构原则
+==================================================
+
+项目必须形成：
+
+                    Tauri UI
+                        │
+                        ▼
+                Rust Application
+                        │
+      ┌─────────────────┼─────────────────┐
+      │                 │                 │
+      ▼                 ▼                 ▼
+Document System   Retrieval System      LLM System
+      │                 │                 │
+      ▼                 ▼                 ▼
+Parser       EmbeddingPort/Provider    LlmClient
+      │                 │
+      ▼                 ▼
+Chunker          VectorIngestService
+                        │
+                        ▼
+                    VectorStore
+                        │
+                        ▼
+                      SQLite
+                        │
+                        ▼
+                     Top-K
+                        │
+                        ▼
+                    RagService
+
+必须做到：
+
+Document 模块不依赖具体 Embedding。
+
+VectorStore 不依赖具体 Embedding。
+
+RetrievalService 不依赖具体模型名称。
+
+RagService 不依赖 SQLite。
+
+前端不直接访问 SQLite。
+
+==================================================
+七、真实 Embedding 本期不实现
+==================================================
+
+这次 Codex：
+
+不要下载 BGE。
+
+不要接 ONNX。
+
+不要写 BGE-small Provider。
+
+不要调 ModelScope。
+
+不要调 Hugging Face Embedding。
+
+不要安装 ONNX Runtime。
+
+只实现：
+
+Embedding 抽象和 Mock。
+
+真实 Embedding 将在框架完成以后，
+
+由成员 2 接入。
+
+==================================================
+八、Embedding 对接架构
+==================================================
+
+Embedding 层必须尽量成为“适配器边界”。
+
+建议定义：
+
+EmbeddingProvider
+
+但不要把外部模型绑死为 Rust 内部模型。
+
+未来应允许：
+
+方案 A：
+Embedding 模型直接作为 Rust Provider
+
+方案 B：
+Embedding 同事先独立程序生成 Vector，
+再把 Vector 交给主框架。
+
+所以还必须提供：
+
+VectorIngestService。
+
+==================================================
+九、EmbeddingInput 标准
+==================================================
+
+框架交给 Embedding 层的数据建议：
+
+EmbeddingInput {
+
+    request_id
+
+    input_type
+
+    text
+
+    document_id?
+
+    chunk_id?
+
+    metadata?
+
+}
+
+input_type：
+
+Document
+
+Query
+
+框架负责：
+
+Document
+→ Parser
+→ Chunk
+
+Embedding 模块负责：
+
+Tokenizer
+Prefix
+Truncation
+Padding
+Pooling
+Normalize
+模型推理。
+
+==================================================
+十、EmbeddingOutput 标准
+==================================================
+
+Embedding 模块最终必须转换成：
+
+EmbeddingOutput {
+
+    request_id
+
+    input_type
+
+    model_info
+
+    vector
+
+    chunk_id?
+
+    metadata?
+
+}
+
+EmbeddingModelInfo：
+
+model_id
+
+model_name
+
+model_version
+
+dimension
+
+runtime
+
+precision
+
+normalize
+
+pooling
+
+max_length
+
+query_prefix
+
+document_prefix
+
+config_hash
+
+业务层主要消费：
+
+model_id
+
+dimension
+
+config_hash
+
+vector
+
+chunk_id
+
+==================================================
+十一、必须允许不同 Embedding 灵活变化
+==================================================
+
+不同模型可以：
+
+512维
+
+768维
+
+1024维
+
+其他维度。
+
+可以：
+
+normalize=true
+
+normalize=false。
+
+可以：
+
+CLS
+
+Mean Pooling
+
+Last Token
+
+其他策略。
+
+可以具有不同：
+
+Prefix
+
+Tokenizer
+
+Runtime。
+
+主框架禁止写死。
+
+不同 Embedding 模型只要最终适配成：
+
+EmbeddingOutput
+
+即可接入系统。
+
+==================================================
+十二、Embedding Compatibility
+==================================================
+
+知识库必须记录：
+
+embedding_model_id
+
+embedding_dimension
+
+embedding_config_hash
+
+embedding_version
+
+如果这些信息发生变化：
+
+旧 Vector Index：
+
+STALE
+
+需要重新建立向量。
+
+禁止：
+
+两个不同 Embedding Space
+
+在一个 Index 内搜索。
+
+==================================================
+十三、Vector Ingest
+==================================================
+
+这是本期重点。
+
+必须有：
+
+VectorIngestService。
+
+负责接收：
+
+EmbeddingOutput。
+
+完成：
+
+校验
+→ compatibility check
+→ vector dimension check
+→ chunk mapping
+→ SQLite transaction
+→ VectorStore insert
+→ Index 状态更新。
+
+必须支持：
+
+单条 Vector
+
+批量 Vector。
+
+例如概念接口：
+
+ingest_embedding(
+    EmbeddingOutput
+)
+
+ingest_embeddings(
+    Vec<EmbeddingOutput>
+)
+
+==================================================
+十四、外部 Vector 测试入口
+==================================================
+
+为了让 Embedding 同事可以独立调试，
+
+必须提供一个非常直接的开发入口。
+
+例如：
+
+Tauri Command：
+
+import_embedding_vectors
+
+或：
+
+CLI：
+
+import-vectors embeddings.json
+
+或：
+
+Rust Integration Test。
+
+最好至少提供：
+
+JSON Import。
+
+JSON 示例：
+
+{
+  "model_info": {
+    "model_id": "test-model",
+    "model_version": "1",
+    "dimension": 768,
+    "config_hash": "..."
+  },
+  "vectors": [
+    {
+      "chunk_id": "...",
+      "vector": [...]
+    }
+  ]
+}
+
+Embedding 同事只要生成符合这个 JSON 的文件，
+
+就可以：
+
+导入项目
+→ 写入 SQLite
+→ 进行 Vector Retrieval。
+
+==================================================
+十五、Query Vector 也需要独立入口
+==================================================
+
+因为真实 Embedding 当前不存在，
+
+检索测试必须允许：
+
+Query Text + Mock Embedding
+
+或者：
+
+直接输入 Query Vector。
+
+例如：
+
+search_by_vector(
+    knowledge_base_id,
+    model_id,
+    query_vector,
+    top_k
+)
+
+这样成员 2 后续可以：
+
+自己生成 Query Vector
+
+直接调用当前框架搜索。
+
+==================================================
+十六、SQLite 必须真实跑通
+==================================================
+
+SQLite 是当前项目必须真正打通的核心。
+
+建议至少有：
+
+knowledge_base
+
+document
+
+chunk
+
+embedding_profile
+
+vector_record
+
+index_state
+
+llm_config
+
+具体 schema 根据 sqlite-vec 能力调整。
+
+knowledge_base：
+
+id
+name
+root_path
+chunk_strategy
+created_at
+
+document：
+
+id
+knowledge_base_id
+file_path
+file_name
+file_hash
+file_type
+status
+created_at
+updated_at
+
+chunk：
+
+id
+document_id
+chunk_index
+text
+metadata_json
+created_at
+
+embedding_profile：
+
+id
+knowledge_base_id
+model_id
+model_version
+dimension
+config_hash
+runtime
+normalize
+pooling
+created_at
+
+vector_record：
+
+chunk_id
+embedding_profile_id
+vector
+created_at
+
+index_state：
+
+knowledge_base_id
+embedding_profile_id
+status
+updated_at
+
+==================================================
+十七、VectorStore
+==================================================
+
+必须定义：
+
+trait VectorStore
+
+职责：
+
+insert
+
+insert_batch
+
+search
+
+delete_by_document
+
+delete_by_chunk
+
+delete_by_profile
+
+count
+
+clear
+
+第一版：
+
+SqliteVectorStore
+
+优先：
+
+sqlite-vec。
+
+如果 sqlite-vec 兼容失败：
+
+允许 fallback：
+
+SQLite BLOB
++
+Rust cosine similarity
+
+但：
+
+必须保证 API 不变化。
+
+必须在文档里明确 fallback。
+
+==================================================
+十八、Document 生命周期
+==================================================
+
+系统管理：
+
+原始文件
+
+Document Metadata
+
+Parsed Text
+
+Chunk
+
+Vector
+
+Embedding Profile
+
+Index State
+
+新增：
+
+新增文件
+→ Parse
+→ Chunk
+→ 状态 = WAITING_EMBEDDING
+
+由于真实 Embedding 不存在，
+
+不能假装已经成功建立真实 Vector。
+
+前端应该明确显示：
+
+WAITING_EMBEDDING。
+
+如果 Mock Mode 开启：
+
+可以生成 Mock Vector，
+
+状态：
+
+MOCK_INDEXED。
+
+==================================================
+十九、文件修改
+==================================================
+
+文件 Hash 变化：
+
+删除该 Document 旧 Chunk
+
+删除对应 Vector
+
+重新 Parse
+
+重新 Chunk
+
+状态：
+
+WAITING_EMBEDDING。
+
+禁止全知识库重建。
+
+==================================================
+二十、文件删除
+==================================================
+
+文件删除：
+
+Document
+
+Chunk
+
+Vector
+
+Index relation
+
+全部同步清理。
+
+==================================================
+二十一、文件监听
+==================================================
+
+使用 Rust：
+
+notify
+
+或者当前合适 crate。
+
+需要：
+
+Debounce
+
+避免重复事件
+
+后台更新
+
+不要阻塞 Tauri UI。
+
+==================================================
+二十二、Chunker
+==================================================
+
+定义：
+
+Chunker Trait。
+
+第一版：
+
+FixedSizeChunker。
+
+配置：
+
+chunk_size
+
+chunk_overlap。
+
+默认可以：
+
+500 中文字符左右
+
+80 overlap。
+
+但必须配置化。
+
+==================================================
+二十三、前端页面必须完整构建
+==================================================
+
+不能只做后端。
+
+必须完成可以演示的 Tauri 前端。
+
+至少包含：
+
+------------------------------
+A. 首页 / Dashboard
+------------------------------
+
+显示：
+
+知识库数量
+
+文档数量
+
+Chunk 数量
+
+Vector 数量
+
+当前 Vector Store
+
+当前 Embedding 状态
+
+Index 状态
+
+------------------------------
+B. 知识库页面
+------------------------------
+
+创建知识库
+
+选择本地目录
+
+查看知识库
+
+删除知识库
+
+重新扫描。
+
+------------------------------
+C. 文件页面
+------------------------------
+
+显示：
+
+文件名
+
+路径
+
+文件类型
+
+Hash
+
+更新时间
+
+Chunk 数量
+
+Embedding 状态
+
+Index 状态。
+
+支持：
+
+添加文件
+
+删除文件
+
+打开目录
+
+重新解析。
+
+------------------------------
+D. Embedding 对接页面
+------------------------------
+
+即使本期没有真实 Embedding，
+
+也必须显示：
+
+当前 Embedding Profile
+
+model_id
+
+dimension
+
+config_hash
+
+runtime
+
+状态。
+
+提供：
+
+导入 Vector JSON
+
+查看导入结果
+
+查看失败原因
+
+显示：
+
+WAITING_EMBEDDING
+
+INDEXED
+
+STALE
+
+MOCK_INDEXED。
+
+------------------------------
+E. Vector Search 页面
+------------------------------
+
+支持两种模式：
+
+1. Mock Query
+
+2. Raw Query Vector
+
+Raw Vector 模式：
+
+输入或导入 Query Vector。
+
+设置：
+
+Top-K。
+
+显示：
+
+score
+
+chunk text
+
+file
+
+chunk id
+
+document id。
+
+------------------------------
+F. RAG 页面
+------------------------------
+
+提供：
+
+问题输入框
+
+Top-K
+
+LLM 配置状态
+
+发送按钮
+
+回答区
+
+Context / Source 区。
+
+在真实 Embedding 未接入之前：
+
+允许使用 Mock Mode 验证调用链。
+
+必须明确提示：
+
+Mock 模式不代表真实检索质量。
+
+------------------------------
+G. Settings
+------------------------------
+
+显示：
+
+SQLite Path
+
+Knowledge Base Root
+
+Chunk Size
+
+Overlap
+
+LLM Base URL
+
+LLM Model
+
+API Key 是否配置
+
+Vector Store 状态。
+
+==================================================
+二十四、简单 LLM Client
+==================================================
+
+定义：
+
+LlmClient Trait。
+
+第一版：
+
+OpenAICompatibleClient。
+
+配置：
+
+base_url
+
+model
+
+api_key。
+
+不要硬编码。
+
+RAG：
+
+Question
+→ Retrieval
+→ Context
+→ Prompt Builder
+→ LLM
+→ Answer。
+
+当前目的只是：
+
+验证完整结果链路。
+
+==================================================
+二十五、Simple RagService
+==================================================
+
+定义：
+
+RagService。
+
+职责：
+
+接收 Query
+
+调用 RetrievalService
+
+得到 Top-K Context
+
+构建 Prompt
+
+调用 LLM
+
+返回：
+
+answer
+
+sources。
+
+不要做：
+
+Planner
+
+Agent Loop
+
+Router
+
+Tool recursion。
+
+==================================================
+二十六、未来 Tool 接口
+==================================================
+
+必须预留：
+
+search_local_knowledge
+
+接口。
+
+建议：
+
+search_local_knowledge(
+    knowledge_base_id,
+    query,
+    top_k
+)
+
+以及：
+
+search_local_knowledge_by_vector(
+    knowledge_base_id,
+    embedding_profile_id,
+    query_vector,
+    top_k
+)
+
+未来苍穹 AI 可以将此能力作为：
+
+Local Knowledge Retrieval Tool。
+
+==================================================
+二十七、性能测试接口
+==================================================
+
+成员 3 需要稳定 Benchmark API。
+
+当前虽然没有真实 Embedding，
+
+仍然需要为以下测试预留：
+
+Embedding Load
+
+Batch Embedding
+
+Vector Insert
+
+Vector Search
+
+File Incremental Update
+
+SQLite Write
+
+SQLite Read
+
+Memory
+
+CPU。
+
+当前框架至少真正实现：
+
+SQLite Insert Benchmark
+
+Vector Insert Benchmark
+
+Vector Search Benchmark
+
+File Update Benchmark。
+
+真实 Embedding Benchmark 后续成员 2/3 接入。
+
+==================================================
+二十八、模拟金融文档
+==================================================
+
+生成：
+
+sample_docs/
+
+至少包含：
+
+bond_underwriting_rules.md
+
+risk_management_policy.md
+
+investment_policy.md
+
+research_report_energy.md
+
+research_report_bank.md
+
+market_research_summary.md
+
+内容使用：
+
+模拟数据。
+
+不要使用真实公司内部敏感资料。
+
+用于：
+
+Chunk
+
+数据库
+
+检索
+
+RAG
+
+演示。
+
+==================================================
+二十九、项目目录
+==================================================
+
+建议：
+
+local-kb/
+
+src/
+
+src-tauri/src/
+
+    app/
+
+    config/
+
+    document/
+
+    chunk/
+
+    embedding/
+        model.rs
+        provider.rs
+        registry.rs
+        mock.rs
+        integration.rs
+
+    vector_store/
+        store.rs
+        sqlite_store.rs
+
+    knowledge_base/
+
+    retrieval/
+
+    rag/
+
+    llm/
+
+    watcher/
+
+    benchmark/
+
+    commands/
+
+    error/
+
+docs/
+
+sample_docs/
+
+data/
+
+models/
+
+tests/
+
+README.md
+
+==================================================
+三十、必须生成完整对接文档
+==================================================
+
+项目完成后：
+
+docs/EMBEDDING_INTEGRATION.md
+
+必须详细写给成员 2。
+
+至少包括：
+
+1. Embedding 在整个架构中的位置；
+2. 我们提供给 Embedding 的 Input；
+3. Embedding 必须返回什么；
+4. Rust 类型定义；
+5. JSON Schema；
+6. Document Embedding 示例；
+7. Query Embedding 示例；
+8. Batch 示例；
+9. model_info 示例；
+10. Dimension 不同怎么处理；
+11. Normalize 不同怎么处理；
+12. Prefix 怎么处理；
+13. Pooling 属于谁负责；
+14. Tokenizer 属于谁负责；
+15. ONNX 属于谁负责；
+16. 如何注册 Provider；
+17. 如何通过 JSON 先测试；
+18. 如何将真实 Provider 接进项目；
+19. 哪些文件允许修改；
+20. 哪些核心文件不要修改；
+21. 如何运行项目验证；
+22. 如何查看 SQLite 中 Vector 是否写入；
+23. 如何执行 Query Search；
+24. 如何看 Top-K；
+25. 模型替换后如何重建 Index；
+26. 常见错误。
+
+这份文档必须做到：
+
+Embedding 同事不需要阅读整个 Rust 项目，
+
+就能开始工作。
+
+==================================================
+三十一、性能测试文档
+==================================================
+
+生成：
+
+docs/PERFORMANCE_TESTING.md
+
+写给成员 3。
+
+包括：
+
+如何启动 Benchmark
+
+测试指标定义
+
+测试数据准备
+
+100 / 1000 / 10000 Chunk
+
+Vector Insert
+
+Search Top5
+
+Search Top10
+
+Incremental Update
+
+CPU
+
+RAM
+
+结果记录模板。
+
+==================================================
+三十二、项目说明文档
+==================================================
+
+生成：
+
+README.md
+
+docs/PROJECT_GUIDE.md
+
+docs/ARCHITECTURE.md
+
+docs/SQLITE_SCHEMA.md
+
+docs/VECTOR_STORE.md
+
+docs/HANDOFF.md
+
+docs/KNOWN_ISSUES.md
+
+PROJECT_GUIDE：
+
+给任何开发人员说明：
+
+如何构建
+
+如何启动
+
+前后端怎么交互
+
+数据库在哪里
+
+日志在哪里
+
+配置在哪里
+
+如何 Debug。
+
+==================================================
+三十三、HANDOFF
+==================================================
+
+HANDOFF.md 必须直接按照三个人划分：
+
+【框架负责人】
+
+已经完成什么
+
+还剩什么
+
+【Embedding 负责人】
+
+下一步准确做什么
+
+从哪个文件开始
+
+需要输出什么
+
+【性能负责人】
+
+如何开始 Benchmark
+
+接口在哪里。
+
+并给出：
+
+“当前接口是否可以冻结并并行开发”
+
+明确结论。
+
+==================================================
+三十四、项目开发阶段
+==================================================
+
+阶段 1：
+
+Tauri v2 + React TS
+
+确保 GUI 启动。
+
+阶段 2：
+
+Rust 模块结构。
+
+阶段 3：
+
+SQLite。
+
+阶段 4：
+
+KnowledgeBase + Document + Chunk。
+
+阶段 5：
+
+VectorStore。
+
+阶段 6：
+
+外部 Vector Ingest。
+
+阶段 7：
+
+MockEmbedding。
+
+阶段 8：
+
+Vector Search。
+
+阶段 9：
+
+完整前端页面。
+
+阶段 10：
+
+文件监听与增量更新。
+
+阶段 11：
+
+LLM Client + RAG。
+
+阶段 12：
+
+Benchmark。
+
+阶段 13：
+
+所有文档。
+
+每个阶段：
+
+cargo check
+
+cargo test
+
+npm.cmd run build
+
+尽量通过。
+
+==================================================
+三十五、验收标准
+==================================================
+
+最终即使完全没有真实 Embedding，
+
+项目也必须可以：
+
+启动 Tauri。
+
+创建知识库。
+
+导入 Markdown / TXT。
+
+生成 Chunk。
+
+SQLite 中看到：
+
+KnowledgeBase
+
+Document
+
+Chunk。
+
+文档状态：
+
+WAITING_EMBEDDING。
+
+可以通过 JSON：
+
+导入模拟或外部 Vector。
+
+SQLite 中成功保存 Vector。
+
+可以通过 Query Vector：
+
+查询 Top-K Chunk。
+
+可以通过 Mock 模式：
+
+测试从 Query 到 RAG 的整体链路。
+
+可以配置外部 LLM。
+
+可以获得：
+
+Answer + Sources。
+
+新增文件：
+
+只新增。
+
+修改文件：
+
+只重建该文件。
+
+删除文件：
+
+同步清理。
+
+Embedding 同事拿到：
+
+EMBEDDING_INTEGRATION.md
+
+即可开始独立接模型。
+
+性能同事拿到：
+
+PERFORMANCE_TESTING.md
+
+即可开始执行测试。
+
+==================================================
+三十六、成功标准
+==================================================
+
+项目成功标准不是：
+
+“Codex 接好了某个 BGE 模型”。
+
+而是：
+
+框架真正可以独立运行；
+
+SQLite 真正连通；
+
+向量真正可以从外部注入；
+
+向量真正可以存储和搜索；
+
+Embedding 输入输出完全解耦；
+
+不同维度模型可以适配；
+
+文档生命周期可靠；
+
+前端完整；
+
+RAG 链路可验证；
+
+Embedding 同事可以独立开发；
+
+性能同事可以独立测试；
+
+项目有完整开发和对接文档。
+
+如果设计选择发生冲突：
+
+优先：
+
+简单
+
+稳定
+
+模块解耦
+
+接口清晰
+
+可运行
+
+可交接
+
+可测试。

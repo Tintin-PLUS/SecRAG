@@ -1,0 +1,29 @@
+[package]
+name = "local-kb"
+version = "0.1.0"
+description = "Windows desktop local knowledge base prototype"
+authors = ["Local KB Team"]
+edition = "2024"
+
+[lib]
+name = "local_kb_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+async-trait = "0.1"
+chrono = { version = "0.4", features = ["serde"] }
+notify = "8"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
+rusqlite = { version = "0.37", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+tauri = { version = "2", features = [] }
+thiserror = "2"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+tracing = "0.1"
+uuid = { version = "1", features = ["v4", "serde"] }
+walkdir = "2"

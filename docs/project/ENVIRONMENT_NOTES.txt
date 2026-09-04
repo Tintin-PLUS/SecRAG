@@ -1,0 +1,737 @@
+# 历史原始资料：其中的目录与命令可能已经过时，当前安装和启动方式请以仓库根目录 README.md 为准。
+
+# Codex 项目构建前环境与执行约束
+
+你现在需要在我的 Windows 本地开发环境中，从零构建一个：
+
+Tauri + Rust + SQLite + 可插拔 Embedding 接口 + 本地 Vector Retrieval + 简单 RAG
+
+的“证券 PC 端侧轻量化本地知识库原型 Demo”。
+
+本文件只描述：
+
+1. 当前开发环境；
+2. 项目目录；
+3. 已安装和未安装的依赖；
+4. Codex 可以做什么；
+5. Codex 不应该做什么；
+6. 构建过程中的执行规则。
+
+具体业务和架构需求以另一份《项目构建完整需求》为准。
+
+==================================================
+一、操作系统
+==================================================
+
+当前开发环境：
+
+Windows 10 / Windows 11
+x86_64
+
+当前只支持：
+
+Windows Desktop
+
+本期不要处理：
+
+Linux
+macOS
+Android
+iOS
+
+不要为了跨平台兼容增加当前项目复杂度。
+
+==================================================
+二、开发目录
+==================================================
+
+开发工具统一尽量位于：
+
+D:\DevTools
+
+项目统一位于：
+
+D:\Workspace
+
+请从：
+
+D:\Workspace
+
+开始构建项目。
+
+目标项目目录：
+
+D:\Workspace\local-kb
+
+请由你创建：
+
+D:\Workspace\local-kb
+
+不要在：
+
+C:\Users
+C:\Program Files
+桌面
+下载目录
+
+创建项目文件。
+
+项目路径中不要出现：
+
+中文
+空格
+特殊符号
+
+Embedding 模型未来统一建议放置：
+
+D:\Workspace\local-kb\models
+
+本地运行数据：
+
+D:\Workspace\local-kb\data
+
+模拟金融文档：
+
+D:\Workspace\local-kb\sample_docs
+
+项目技术文档：
+
+D:\Workspace\local-kb\docs
+
+==================================================
+三、Rust 环境
+==================================================
+
+Rust 已通过 rustup 安装。
+
+环境变量：
+
+RUSTUP_HOME=D:\DevTools\Rust\rustup
+
+CARGO_HOME=D:\DevTools\Rust\cargo
+
+要求使用：
+
+stable-x86_64-pc-windows-msvc
+
+不要使用：
+
+x86_64-pc-windows-gnu
+
+不要主动切换 nightly。
+
+除非需求无法通过 stable 实现，否则禁止要求 nightly。
+
+开发开始前请自行检查：
+
+rustc --version
+cargo --version
+rustup show
+where.exe rustc
+where.exe cargo
+where.exe rustup
+
+Rust / Cargo / Rustup 应来自：
+
+D:\DevTools\Rust\cargo\bin
+
+==================================================
+四、Windows 编译环境
+==================================================
+
+当前机器应具备：
+
+Microsoft Visual Studio Build Tools
+
+包含：
+
+Desktop development with C++
+MSVC C++ Toolset
+Windows SDK
+
+Rust native crate 使用：
+
+MSVC
+
+不要引入：
+
+MinGW
+GNU Toolchain
+
+==================================================
+五、Node.js
+==================================================
+
+Node.js 安装目录：
+
+D:\DevTools\NodeJS
+
+目标版本：
+
+Node.js 24 LTS
+
+包管理器统一：
+
+npm
+
+不要擅自改为：
+
+pnpm
+yarn
+bun
+
+开发前检查：
+
+node --version
+npm --version
+where.exe node
+where.exe npm
+
+Node 应只存在一个有效安装路径。
+
+==================================================
+六、PowerShell 与 npm
+==================================================
+
+PowerShell 可能限制 npm.ps1 执行。
+
+如果：
+
+npm ...
+
+由于 PowerShell ExecutionPolicy 被拒绝，
+
+可以直接使用：
+
+npm.cmd
+
+例如：
+
+npm.cmd install
+npm.cmd run build
+npm.cmd run tauri dev
+
+不要因为 PowerShell npm.ps1 限制阻塞项目开发。
+
+==================================================
+七、npm 目录
+==================================================
+
+npm global：
+
+D:\DevTools\npm-global
+
+npm cache：
+
+D:\DevTools\npm-cache
+
+可以检查：
+
+npm.cmd config get prefix
+npm.cmd config get cache
+
+项目本身尽量使用 local dependency。
+
+不要要求用户全局安装大量 npm package。
+
+==================================================
+八、Git
+==================================================
+
+Git 已安装。
+
+开发前检查：
+
+git --version
+where.exe git
+
+进入：
+
+D:\Workspace\local-kb
+
+后初始化 Git：
+
+git init
+
+创建完整 .gitignore。
+
+至少忽略：
+
+target/
+node_modules/
+dist/
+models/
+data/
+*.db
+*.sqlite
+*.sqlite3
+.env
+logs/
+*.log
+
+不要提交：
+
+API Key
+本地金融文档
+Embedding 模型权重
+SQLite Runtime 数据库
+用户运行日志
+包含敏感原文的数据文件
+
+==================================================
+九、Tauri
+==================================================
+
+使用：
+
+Tauri v2
+
+Tauri CLI 应作为项目 local dependency 管理。
+
+不要要求系统全局固定安装 Tauri CLI。
+
+主要启动方式：
+
+npm.cmd run tauri dev
+
+要求最终至少保证：
+
+npm.cmd install
+npm.cmd run build
+cargo check
+cargo test
+
+正常。
+
+如果 WebView2 已存在，不要重复安装。
+
+不要使用 Electron。
+
+==================================================
+十、前端技术
+==================================================
+
+优先：
+
+React + TypeScript
+
+要求：
+
+简单
+清晰
+可操作
+用于 Demo 验证
+
+不要优先投入：
+
+复杂动画
+大型设计系统
+复杂前端状态框架
+视觉特效
+
+但不能只生成 Tauri 空壳。
+
+必须生成真实可操作页面。
+
+==================================================
+十一、SQLite
+==================================================
+
+项目使用嵌入式 SQLite。
+
+Rust 优先：
+
+rusqlite
+
+SQLite 不需要独立 Server。
+
+不要要求：
+
+安装数据库服务
+配置端口
+配置账号密码
+
+SQLite 必须真实连通。
+
+即使目前没有真实 Embedding，
+
+项目也必须能够：
+
+创建 SQLite 数据库
+初始化 Schema
+写入 KnowledgeBase
+写入 Document
+写入 Chunk
+写入外部提供的 Vector
+查询 Vector
+删除 Vector
+更新 Index 状态
+
+==================================================
+十二、Vector Store
+==================================================
+
+第一版目标：
+
+SQLite + sqlite-vec
+
+但是：
+
+必须定义 VectorStore Trait。
+
+业务层禁止直接依赖 sqlite-vec API。
+
+如果当前 Windows + Rust + sqlite-vec 版本出现兼容问题：
+
+1. 优先查询当前官方文档；
+2. 尝试稳定方式完成；
+3. 如果确实无法完成，
+   保留 VectorStore 抽象；
+4. 可以临时使用 SQLite BLOB 保存向量 +
+   Rust 内存 cosine similarity 做最小可运行实现；
+5. 但必须记录为 fallback；
+6. 不允许把整个项目停掉。
+
+优先目标：
+
+SQLite 数据库链路必须跑通。
+
+==================================================
+十三、非常重要：本期不要接真实 Embedding
+==================================================
+
+当前项目不要下载、不要集成、不要调试任何真实 Embedding 模型。
+
+包括但不限于：
+
+BGE
+BGE-M3
+ModelScope Embedding
+Hugging Face Embedding
+ONNX Embedding
+
+不要安装：
+
+ONNX Runtime
+PyTorch
+Python AI Runtime
+CUDA
+cuDNN
+
+真实 Embedding 由另外一名成员负责。
+
+你的任务是：
+
+把 Embedding 的“插槽”做好。
+
+必须提供：
+
+EmbeddingProvider Trait
+
+EmbeddingAdapter
+
+EmbeddingRegistry
+
+EmbeddingInput
+
+EmbeddingOutput
+
+EmbeddingModelInfo
+
+VectorIngestService
+
+让外部 Embedding 模块以后能够：
+
+接收 Chunk
+→ 输出 Vector
+→ 交给当前项目
+→ 写入 SQLite
+→ 建立检索索引
+
+==================================================
+十四、为了框架测试允许 Mock Embedding
+==================================================
+
+可以实现：
+
+MockEmbeddingProvider
+
+或：
+
+DeterministicEmbeddingProvider
+
+但它只用于验证：
+
+接口
+数据库
+Vector 存储
+检索调用链
+前端
+RAG 编排
+
+Mock 必须：
+
+确定性
+
+同样输入得到同样 Vector。
+
+禁止用 Mock 检索效果代表真实语义准确率。
+
+README 和 UI 必须明确：
+
+Mock Embedding 仅用于工程链路验证。
+
+==================================================
+十五、Embedding 对接原则
+==================================================
+
+业务系统不能假设：
+
+Vector 是 512 维
+
+Vector 是 768 维
+
+Vector 是 1024 维
+
+业务系统不能假设：
+
+CLS Pooling
+
+Mean Pooling
+
+Normalize=true
+
+固定 Query Prefix
+
+固定模型 Runtime
+
+这些都由外部 Embedding Adapter 描述。
+
+当前框架只要求外部最终能够提供：
+
+model_id
+model_version
+dimension
+embedding_config_hash
+vector
+
+Document Vector 还需要：
+
+chunk_id
+
+Query Vector 需要：
+
+query_id 或 request_id
+
+==================================================
+十六、外部 Vector 注入必须可以独立测试
+==================================================
+
+即使没有 Embedding Provider，
+
+必须提供一个开发测试入口，例如：
+
+ingest_vectors
+
+允许通过：
+
+Rust Service
+Tauri Command
+测试 JSON
+或内部 CLI
+
+直接提交：
+
+chunk_id
+model_id
+dimension
+vector
+
+然后：
+
+写入 SQLite。
+
+必须可以单独验证：
+
+外部 Vector
+→ Rust Backend
+→ SQLite
+→ VectorStore
+→ Search
+
+==================================================
+十七、大模型
+==================================================
+
+本地 Embedding 与外部 LLM 分离。
+
+本期允许调用外部大模型用于：
+
+最终 RAG 结果验证。
+
+定义：
+
+LlmClient Trait
+
+第一版实现：
+
+OpenAI-Compatible LLM Client
+
+配置：
+
+base_url
+api_key
+model
+
+禁止硬编码 API Key。
+
+通过：
+
+.env
+环境变量
+本地设置
+
+配置。
+
+如果用户未提供 API Key：
+
+前端仍应可以运行。
+
+只是 RAG Answer 显示：
+
+LLM 未配置。
+
+==================================================
+十八、不要引入的技术
+==================================================
+
+本期禁止主动引入：
+
+LangChain
+LangGraph
+MCP Server
+Multi-Agent
+Text-to-SQL
+StarRocks
+OceanBase
+Redis
+Kafka
+Milvus
+Qdrant Server
+Docker
+Kubernetes
+Python Runtime
+PyTorch
+CUDA
+复杂 Agent Framework
+
+==================================================
+十九、开发执行原则
+==================================================
+
+先读取：
+
+1. 本环境说明
+2. 项目构建完整需求
+
+然后：
+
+先输出：
+
+1. 最终目录结构；
+2. Rust crate 清单；
+3. npm dependency 清单；
+4. SQLite 设计；
+5. Embedding 对接接口；
+6. 开发阶段顺序。
+
+随后立即开始创建项目。
+
+不要等我再次确认。
+
+每完成一个阶段：
+
+尽量执行：
+
+cargo check
+cargo test
+npm.cmd run build
+
+必要时：
+
+npm.cmd run tauri dev
+
+能自行解决的问题：
+
+自行修复继续。
+
+只有以下情况再停下来：
+
+涉及删除 D:\Workspace 之外的文件；
+涉及危险系统级配置；
+必须提供真实账号/API Key；
+需求本身发生冲突且无法自行选择。
+
+==================================================
+二十、项目最终必须生成的文档
+==================================================
+
+项目完成后至少生成：
+
+README.md
+
+docs/ARCHITECTURE.md
+
+docs/PROJECT_GUIDE.md
+
+docs/EMBEDDING_INTEGRATION.md
+
+docs/VECTOR_STORE.md
+
+docs/SQLITE_SCHEMA.md
+
+docs/PERFORMANCE_TESTING.md
+
+docs/HANDOFF.md
+
+docs/KNOWN_ISSUES.md
+
+其中最重要：
+
+EMBEDDING_INTEGRATION.md
+
+必须能够直接交给 Embedding 负责人。
+
+HANDOFF.md
+
+必须能够直接交给三名成员进行协作。
+
+==================================================
+二十一、最终环境原则
+==================================================
+
+当前框架开发不依赖真实 Embedding。
+
+优先实现：
+
+Tauri
+Rust
+SQLite
+VectorStore
+Document
+Chunk
+Vector Ingest
+Retrieval
+RAG
+LLM Client
+前端
+对接协议
+测试接口
+
+确保：
+
+项目可以先完整运行。
+
+等 Embedding 成员完成模型后，
+
+再通过已定义接口嵌入当前项目进行真实效果验证。

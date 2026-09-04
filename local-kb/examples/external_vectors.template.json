@@ -1,0 +1,24 @@
+{
+  "knowledge_base_id": "replace-with-knowledge-base-id",
+  "model_info": {
+    "model_id": "external-test-model",
+    "model_name": "External Test Model",
+    "model_version": "1",
+    "dimension": 4,
+    "runtime": "external-process",
+    "precision": "f32",
+    "normalize": true,
+    "pooling": "mean",
+    "max_length": 512,
+    "query_prefix": "query: ",
+    "document_prefix": "passage: ",
+    "config_hash": "replace-with-stable-config-hash"
+  },
+  "vectors": [
+    {
+      "chunk_id": "replace-with-existing-chunk-id",
+      "request_id": "optional-request-id",
+      "vector": [0.1, 0.2, 0.3, 0.4]
+    }
+  ]
+}

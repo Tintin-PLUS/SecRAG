@@ -1,0 +1,13 @@
+export type KnowledgeBase={id:string;name:string;root_path:string;chunk_size:number;chunk_overlap:number;created_at:string;updated_at:string};
+export type Dashboard={knowledge_bases:number;documents:number;chunks:number;vectors:number;vector_store:string;embedding_status:string;index_status:string};
+export type DocumentView={id:string;knowledge_base_id:string;file_path:string;file_name:string;file_hash:string;file_type:string;status:string;updated_at:string;chunk_count:number;vector_count:number};
+export type ScanResult={added:number;updated:number;unchanged:number;removed:number;chunks_created:number;errors:string[]};
+export type Profile={id:string;knowledge_base_id:string;model_id:string;model_name:string;model_version:string;dimension:number;config_hash:string;runtime:string;normalize:boolean;pooling:string;status:string;vector_count:number};
+export type SearchHit={score:number;chunk_id:string;document_id:string;file_name:string;file_path:string;chunk_index:number;text:string};
+export type RagResponse={answer:string;sources:SearchHit[];llm_used:boolean;warning?:string};
+export type Settings={database_path:string;chunk_size:number;chunk_overlap:number;llm_base_url:string;llm_model:string;llm_api_key_configured:boolean;llm_provider:string;llm_thinking:boolean;llm_reasoning_effort:string;llm_timeout_secs:number;vector_store:string;registered_providers:string[];embedding_base_url:string;embedding_python:string;embedding_script:string;embedding_batch_size:number};
+export type Benchmark={chunk_count:number;dimension:number;insert_ms:number;search_top5_ms:number;search_top10_ms:number;sqlite_read_ms:number};
+export type ChunkView={id:string;document_id:string;file_name:string;chunk_index:number;text:string};
+export type EmbeddingModelInfo={model_id:string;model_name:string;model_version:string;dimension:number;runtime:string;precision:string;normalize:boolean;pooling:string;max_length?:number;query_prefix?:string;document_prefix?:string;config_hash:string};
+export type EmbeddingServiceStatus={reachable:boolean;managed:boolean;pid?:number;base_url:string;python:string;script:string;loaded_models:string[];dependency_available?:boolean;offline?:boolean;protocol_version?:string;error?:string};
+export type EmbeddingIndexResult={model_id:string;chunks_embedded:number;batches:number;profile_id:string;status:string};
