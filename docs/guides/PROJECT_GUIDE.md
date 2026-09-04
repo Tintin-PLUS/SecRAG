@@ -3,7 +3,7 @@
 ## 开发环境
 
 - Windows 10/11 x86_64；只使用 `stable-x86_64-pc-windows-msvc`。
-- Node.js 24 LTS 与 npm；若 PowerShell 阻止 `npm.ps1`，始终使用 `npm.cmd`。
+- Node.js 22.12+（推荐 24 LTS）与 npm；若 PowerShell 阻止 `npm.ps1`，始终使用 `npm.cmd`。
 - Visual Studio Build Tools（Desktop development with C++）、Windows SDK、WebView2。
 - 项目可以放在任意不含受限权限的本地目录，不需要 SQLite Server 或账号。
 - 真实 Embedding 另需 Python 3.10–3.12、项目 `.venv`、`sentence-transformers` 和至少一个本地模型；详见 `EMBEDDING_RUNTIME_SETUP.md`。
