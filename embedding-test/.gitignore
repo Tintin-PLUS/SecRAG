@@ -1,0 +1,24 @@
+# Rebuildable dependencies and build output
+/target/
+/.venv/
+/venv/
+/.pip-cache/
+**/__pycache__/
+*.py[cod]
+
+# Downloaded model weights and local runtime state
+/data/*
+!/data/.gitkeep
+/logs/
+/results/
+/tmp/
+/temp/
+*.log
+*.pid
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# Keep Cargo.lock, requirements.txt, eval scripts, and public test fixtures.

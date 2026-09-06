@@ -1,0 +1,2 @@
+# Tested package version; pip installs its transitive dependencies.
+sentence-transformers==5.7.0

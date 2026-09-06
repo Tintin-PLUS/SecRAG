@@ -8,6 +8,7 @@ SecRAG 是一个面向 Windows PC 的端侧本地知识库原型。桌面端使�
 
 ```text
 SecRAG/
+├─ embedding-test/         # 测试脚本目录
 ├─ local-kb/               # 主程序源码
 │  ├─ src/                 # React 前端
 │  ├─ src-tauri/           # Rust/Tauri 后端
