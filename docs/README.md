@@ -15,6 +15,10 @@
 - [已知问题](guides/KNOWN_ISSUES.md)
 - [项目交接](guides/HANDOFF.md)
 
+## 端侧知识库技术选型测试
+
+技术选型对比所需的完整测试方案、通用指标定义、测试矩阵与结果记录模板统一放在仓库根目录的 [`performance-test/`](../performance-test/)，主文档为 `performance-test/端侧知识库技术选型测试方案.md`。本文 `guides/PERFORMANCE_TESTING.md` 侧重框架内置微基准的运行方式，二者互补。
+
 ## 项目原始资料
 
 - [项目构建需求](project/PROJECT_REQUIREMENTS.txt)

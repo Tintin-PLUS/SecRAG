@@ -1,0 +1,4 @@
+Model,Dim,ChunkSize,Overlap,TopK,Hit@k,MRR@k,nDCG@k,Recall@k,Precision@k,Avg_Latency_ms,Num_Queries,Notes
+bge-small,512,,,,,,,,,,,
+m3e-base,768,,,,,,,,,,,
+bge-m3,1024,,,,,,,,,,,
