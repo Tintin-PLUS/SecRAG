@@ -104,3 +104,8 @@ Desktop.ini
 *.swp
 *.swo
 *~
+local-kb/src-tauri/Cargo.toml
+local-kb/src-tauri/Cargo.toml
+start-local-kb.bat
+local-kb/scripts/check-dev-server.ps1
+local-kb/vite.config.ts

@@ -1,9 +1,0 @@
-Scenario,VectorStore,Model,Dim,Count,Batch,Reps,P50_ms,P95_ms,P99_ms,Throughput,Peak_CPU_pct,Peak_RAM_MB,Disk_MB,Notes
-, , , , , , , , , , , , , ,
-Search_Top5,fallback, , , , , , , , , , , , ,
-Search_Top5,sqlite-vec, , , , , , , , , , , , ,
-Search_Top10,fallback, , , , , , , , , , , , ,
-Search_Top10,sqlite-vec, , , , , , , , , , , , ,
-Build_Index,fallback, , , , , , , , , , , , ,
-Build_Index,sqlite-vec, , , , , , , , , , , , ,
-Incremental_Update,fallback, , , , , , , , , , , , ,
