@@ -8,6 +8,7 @@ Embedding 常驻服务
 import json
 import os
 import sys
+import time
 import traceback
 
 # 禁用代理，直连HuggingFace镜像
@@ -20,6 +21,7 @@ os.environ["HF_HUB_OFFLINE"] = "1"
 
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from sentence_transformers import SentenceTransformer
+import torch
 
 MODELS = {}
 MODEL_MAP = {
@@ -40,14 +42,19 @@ def get_model(model_key):
             raise
     return MODELS[model_key]
 
-# 启动时预加载默认模型
-print("预加载默认模型 bge-small...", flush=True)
-try:
-    get_model("bge-small")
-    print("默认模型加载完成", flush=True)
-except Exception as e:
-    print(f"默认模型加载失败: {e}", flush=True)
-    print("将在首次请求时重试加载", flush=True)
+def parse_startup_args(args):
+    port = int(args[0]) if args else 8902
+    model_key = args[1] if len(args) > 1 else "bge-small"
+    thread_count = int(args[2]) if len(args) > 2 else None
+    if len(args) > 3:
+        raise ValueError("用法: embed_server.py [port] [model] [torch_threads]")
+    if not 1 <= port <= 65535:
+        raise ValueError("端口必须在 1-65535 之间")
+    if model_key not in MODEL_MAP:
+        raise ValueError(f"未知模型: {model_key}")
+    if thread_count is not None and thread_count < 1:
+        raise ValueError("torch_threads 必须大于 0")
+    return port, model_key, thread_count
 
 
 class EmbedHandler(BaseHTTPRequestHandler):
@@ -61,12 +68,23 @@ class EmbedHandler(BaseHTTPRequestHandler):
             model_key = req.get("model", "bge-small")
 
             if not texts:
-                response = json.dumps({"vectors": [], "dim": 0})
+                response = json.dumps({"vectors": [], "dim": 0, "token_count": 0, "encode_ms": 0.0})
             else:
                 model = get_model(model_key)
+                tokenized = model.tokenize(texts)
+                attention_mask = tokenized.get("attention_mask")
+                token_count = int(attention_mask.sum().item()) if attention_mask is not None else 0
+                started = time.perf_counter()
                 vectors = model.encode(texts, show_progress_bar=False).tolist()
+                encode_ms = (time.perf_counter() - started) * 1000.0
                 dim = len(vectors[0]) if vectors else 0
-                response = json.dumps({"vectors": vectors, "dim": dim})
+                response = json.dumps({
+                    "vectors": vectors,
+                    "dim": dim,
+                    "token_count": token_count,
+                    "encode_ms": encode_ms,
+                    "texts": len(texts),
+                })
 
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
@@ -83,7 +101,17 @@ class EmbedHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/health":
             loaded = list(MODELS.keys())
-            response = json.dumps({"status": "ok", "loaded_models": loaded})
+            dimensions = {
+                key: MODELS[key].get_sentence_embedding_dimension()
+                for key in loaded
+            }
+            response = json.dumps({
+                "status": "ok",
+                "loaded_models": loaded,
+                "dimensions": dimensions,
+                "device": "cpu",
+                "torch_threads": torch.get_num_threads(),
+            })
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
@@ -97,7 +125,17 @@ class EmbedHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8902
+    port, preload_model, thread_count = parse_startup_args(sys.argv[1:])
+    if thread_count is not None:
+        torch.set_num_threads(thread_count)
+        torch.set_num_interop_threads(1)
+    print(f"预加载模型 {preload_model}...", flush=True)
+    try:
+        get_model(preload_model)
+        print(f"模型 {preload_model} 加载完成", flush=True)
+    except Exception as e:
+        print(f"模型 {preload_model} 加载失败: {e}", flush=True)
+        print("将在首次请求时重试加载", flush=True)
     print(f"Embedding服务启动: http://127.0.0.1:{port}", flush=True)
     print(f"可用模型: {list(MODEL_MAP.keys())}", flush=True)
     server = ThreadingHTTPServer(("127.0.0.1", port), EmbedHandler)

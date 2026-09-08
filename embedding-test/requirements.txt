@@ -1,2 +1,4 @@
-# Tested package version; pip installs its transitive dependencies.
+# Direct runtime dependencies used by the reusable benchmark environment.
+numpy==2.4.6
 sentence-transformers==5.7.0
+sqlite-vec==0.1.6

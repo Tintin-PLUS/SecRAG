@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+
+# 原始性能数据和生成报告不提交；保留各目录的说明文件。
+results/*
+!results/.gitignore
+!results/README.md
+!results/baselines/
+!results/baselines/*.json
+reports/*
+!reports/.gitignore
+!reports/README.md
+

@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "retrieved_at": "2026-09-07",
+  "note": "新增文件均为官方公开材料的测试用摘要整理，不是法规原文。",
+  "added_documents": [
+    "csrc_program_trading_rules.md",
+    "csrc_program_trading_monitoring.md",
+    "sse_trading_sessions_2026.md",
+    "sse_risk_warning_delisting.md",
+    "sse_star_market_trading.md",
+    "szse_chinext_trading.md",
+    "bse_trading_rules.md",
+    "szse_margin_maintenance_ratio.md",
+    "csrc_securities_lending_2024.md",
+    "csrc_market_value_management.md",
+    "sse_stock_options.md",
+    "sse_gold_etf.md"
+  ]
+}

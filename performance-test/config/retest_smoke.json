@@ -1,0 +1,21 @@
+{
+  "schema_version": "2.0-smoke",
+  "random_seed": 20260907,
+  "resource_sample_interval_ms": 200,
+  "models": ["bge-small"],
+  "model_order_by_repetition": [["bge-small"]],
+  "cold_start_repetitions": 1,
+  "warmup_requests": 2,
+  "batch_sizes": [1, 2],
+  "batch_repetitions": 1,
+  "top_k": [3],
+  "search_rounds": 1,
+  "minimum_requests_per_round": 5,
+  "baseline_chunk_config": "fixed-150-30",
+  "chunk_configs": [
+    {"name": "fixed-150-30", "strategy": "fixed", "chunk_size": 150, "overlap": 30}
+  ],
+  "build_repetitions": 1,
+  "storage": {"chunk_counts": [10], "dimension": 8, "top_k": [3], "query_repetitions": 2, "rounds": 1},
+  "hardware_profiles": [{"name": "冒烟线程限制", "ram_gib": 8, "torch_threads": 2}]
+}
