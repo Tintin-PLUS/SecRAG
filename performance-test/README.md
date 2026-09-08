@@ -47,6 +47,16 @@ powershell -ExecutionPolicy Bypass -File .\performance-test\run_formal_tests.ps1
 
 脚本严格串行执行冷启动、批量嵌入、检索、存储、线程限额硬件估量和功能闭环。资源采样器只监控本轮进程，不是独立并发压测。不要同时运行 IDE 索引、杀毒全盘扫描、模型下载或其他性能任务。
 
+需要复测历史大切分，并完整覆盖三个模型时，仍使用同一个正式入口，只切换配置文件：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\performance-test\run_formal_tests.ps1 `
+  -SessionId 20260908-large-matrix-34q `
+  -ConfigPath .\performance-test\config\retest_large_hardware_matrix.json
+```
+
+该配置在硬件阶段串行执行 `3 模型 × 3 线程档 × 3 fixed 切分 × 3 Top-K = 81` 个组合。每个组合包含 3 轮 × 34 题的逐请求数据；切分固定为 `300/50`、`500/80`、`800/120`。结果和报告写入新的同名 Session，不覆盖 `20260908-small-chunks-34q` 或历史基线。
+
 报告可从已有完整 Session 单独重建：
 
 ```powershell
@@ -58,7 +68,11 @@ powershell -ExecutionPolicy Bypass -File .\performance-test\run_formal_tests.ps1
 只想验证一个模型、一个 fixed 切分和一个 Top-K 时，直接传参：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\performance-test\run_single_test.ps1 -ChunkSize 150 -Overlap 30 -Model bge-small -TopK 5
+powershell -ExecutionPolicy Bypass -File .\performance-test\run_single_test.ps1 `
+  -ChunkSize 150 `
+  -Overlap 30 `
+  -Model bge-small `
+  -TopK 5
 ```
 
 默认执行 3 轮、每轮至少 334 个请求、30 次预热、3 次建库，结果写入新的 `results/single/<时间戳>/result.json`。它仍使用 24 篇语料和原始 34 题，并保留逐请求延迟、逐题质量、资源峰值及 artifacts。

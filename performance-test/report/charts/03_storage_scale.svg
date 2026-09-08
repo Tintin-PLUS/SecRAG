@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#f8fafc"/>
+<text x="80" y="72" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#0f172a">向量存储规模对比</text>
+<text x="80" y="108" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#64748b">512 维确定性向量；每格 3 轮 × 100 查询</text>
+<line x1="130.0" y1="160.0" x2="1460.0" y2="160.0" stroke="#e2e8f0"/>
+<text x="115.0" y="165.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">83.321</text>
+<line x1="130.0" y1="276.0" x2="1460.0" y2="276.0" stroke="#e2e8f0"/>
+<text x="115.0" y="281.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">65.339</text>
+<line x1="130.0" y1="392.0" x2="1460.0" y2="392.0" stroke="#e2e8f0"/>
+<text x="115.0" y="397.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">47.357</text>
+<line x1="130.0" y1="508.0" x2="1460.0" y2="508.0" stroke="#e2e8f0"/>
+<text x="115.0" y="513.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">29.376</text>
+<line x1="130.0" y1="624.0" x2="1460.0" y2="624.0" stroke="#e2e8f0"/>
+<text x="115.0" y="629.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">11.394</text>
+<line x1="130.0" y1="740.0" x2="1460.0" y2="740.0" stroke="#e2e8f0"/>
+<text x="115.0" y="745.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">-6.588</text>
+<text x="130.0" y="770.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">1000/K3</text>
+<text x="396.0" y="770.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">1000/K5</text>
+<text x="662.0" y="770.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">1000/K10</text>
+<text x="928.0" y="770.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">10000/K3</text>
+<text x="1194.0" y="770.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">10000/K5</text>
+<text x="1460.0" y="770.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">10000/K10</text>
+<polyline points="130.0,652.0 396.0,652.7 662.0,648.7 928.0,216.1 1194.0,278.4 1460.0,276.8" fill="none" stroke="#dc2626" stroke-width="3"/>
+<circle cx="130.0" cy="652.0" r="3.2" fill="#dc2626"/>
+<circle cx="396.0" cy="652.7" r="3.2" fill="#dc2626"/>
+<circle cx="662.0" cy="648.7" r="3.2" fill="#dc2626"/>
+<circle cx="928.0" cy="216.1" r="3.2" fill="#dc2626"/>
+<circle cx="1194.0" cy="278.4" r="3.2" fill="#dc2626"/>
+<circle cx="1460.0" cy="276.8" r="3.2" fill="#dc2626"/>
+<line x1="1080" y1="105" x2="1110" y2="105" stroke="#dc2626" stroke-width="3"/>
+<text x="1118" y="111" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#334155">fallback</text>
+<polyline points="130.0,683.4 396.0,683.5 662.0,683.9 928.0,583.8 1194.0,586.0 1460.0,588.6" fill="none" stroke="#2563eb" stroke-width="3"/>
+<circle cx="130.0" cy="683.4" r="3.2" fill="#2563eb"/>
+<circle cx="396.0" cy="683.5" r="3.2" fill="#2563eb"/>
+<circle cx="662.0" cy="683.9" r="3.2" fill="#2563eb"/>
+<circle cx="928.0" cy="583.8" r="3.2" fill="#2563eb"/>
+<circle cx="1194.0" cy="586.0" r="3.2" fill="#2563eb"/>
+<circle cx="1460.0" cy="588.6" r="3.2" fill="#2563eb"/>
+<line x1="1250" y1="105" x2="1280" y2="105" stroke="#2563eb" stroke-width="3"/>
+<text x="1288" y="111" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#334155">sqlite-vec</text>
+<text x="34" y="450.0" transform="rotate(-90 34 450.0)" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#334155">P95 查询时延（ms）</text>
+</svg>

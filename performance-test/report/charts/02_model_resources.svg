@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#f8fafc"/>
+<text x="80" y="72" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#0f172a">模型资源占用与最低内存档位</text>
+<text x="80" y="108" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#64748b">内存档位采用 4 GiB 系统预留 + 1.5×测量基数后向上取整</text>
+<line x1="310.0" y1="130.0" x2="310.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="310.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.00</text>
+<line x1="542.0" y1="130.0" x2="542.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="542.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.56</text>
+<line x1="774.0" y1="130.0" x2="774.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="774.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">1.12</text>
+<line x1="1006.0" y1="130.0" x2="1006.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1006.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">1.68</text>
+<line x1="1238.0" y1="130.0" x2="1238.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1238.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">2.24</text>
+<line x1="1470.0" y1="130.0" x2="1470.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1470.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">2.80</text>
+<text x="292.0" y="265.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">bge-small</text>
+<rect x="310.0" y="238.0" width="310.4" height="44.0" rx="5" fill="#0f766e"/>
+<text x="630.4" y="265.0" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">0.75 GiB → 8 GB</text>
+<text x="292.0" y="485.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">m3e-base</text>
+<rect x="310.0" y="458.0" width="431.6" height="44.0" rx="5" fill="#2563eb"/>
+<text x="751.6" y="485.0" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">1.04 GiB → 8 GB</text>
+<text x="292.0" y="705.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">bge-m3</text>
+<rect x="310.0" y="678.0" width="1160.0" height="44.0" rx="5" fill="#c2410c"/>
+<text x="1480.0" y="705.0" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">2.80 GiB → 16 GB</text>
+<text x="890.0" y="882" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#334155">模型文件 + 峰值私有提交（GiB）</text>
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#f8fafc"/>
+<text x="80" y="72" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Top-K 质量取舍</text>
+<text x="80" y="108" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#64748b">bge-small + fixed-500-80 + 混合检索</text>
+<line x1="130.0" y1="160.0" x2="1460.0" y2="160.0" stroke="#e2e8f0"/>
+<text x="115.0" y="165.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">1.071</text>
+<line x1="130.0" y1="276.0" x2="1460.0" y2="276.0" stroke="#e2e8f0"/>
+<text x="115.0" y="281.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.882</text>
+<line x1="130.0" y1="392.0" x2="1460.0" y2="392.0" stroke="#e2e8f0"/>
+<text x="115.0" y="397.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.693</text>
+<line x1="130.0" y1="508.0" x2="1460.0" y2="508.0" stroke="#e2e8f0"/>
+<text x="115.0" y="513.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.504</text>
+<line x1="130.0" y1="624.0" x2="1460.0" y2="624.0" stroke="#e2e8f0"/>
+<text x="115.0" y="629.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.315</text>
+<line x1="130.0" y1="740.0" x2="1460.0" y2="740.0" stroke="#e2e8f0"/>
+<text x="115.0" y="745.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.126</text>
+<text x="130.0" y="770.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">K=3</text>
+<text x="795.0" y="770.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">K=5</text>
+<text x="1460.0" y="770.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">K=10</text>
+<polyline points="130.0,314.8 795.0,278.6 1460.0,216.1" fill="none" stroke="#2563eb" stroke-width="3"/>
+<circle cx="130.0" cy="314.8" r="3.2" fill="#2563eb"/>
+<circle cx="795.0" cy="278.6" r="3.2" fill="#2563eb"/>
+<circle cx="1460.0" cy="216.1" r="3.2" fill="#2563eb"/>
+<line x1="1080" y1="105" x2="1110" y2="105" stroke="#2563eb" stroke-width="3"/>
+<text x="1118" y="111" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#334155">Recall</text>
+<polyline points="130.0,528.6 795.0,611.6 1460.0,683.9" fill="none" stroke="#dc2626" stroke-width="3"/>
+<circle cx="130.0" cy="528.6" r="3.2" fill="#dc2626"/>
+<circle cx="795.0" cy="611.6" r="3.2" fill="#dc2626"/>
+<circle cx="1460.0" cy="683.9" r="3.2" fill="#dc2626"/>
+<line x1="1250" y1="105" x2="1280" y2="105" stroke="#dc2626" stroke-width="3"/>
+<text x="1288" y="111" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#334155">Precision</text>
+<polyline points="130.0,297.1 795.0,289.9 1460.0,266.6" fill="none" stroke="#16a34a" stroke-width="3"/>
+<circle cx="130.0" cy="297.1" r="3.2" fill="#16a34a"/>
+<circle cx="795.0" cy="289.9" r="3.2" fill="#16a34a"/>
+<circle cx="1460.0" cy="266.6" r="3.2" fill="#16a34a"/>
+<line x1="1420" y1="105" x2="1450" y2="105" stroke="#16a34a" stroke-width="3"/>
+<text x="1458" y="111" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#334155">nDCG</text>
+<text x="34" y="450.0" transform="rotate(-90 34 450.0)" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#334155">指标值</text>
+</svg>

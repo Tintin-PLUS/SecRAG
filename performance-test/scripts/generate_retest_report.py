@@ -20,7 +20,10 @@ MODEL_CACHE_NAMES = {
     "bge-m3": "models--BAAI--bge-m3",
 }
 MODEL_COLORS = {"bge-small": "#0f766e", "m3e-base": "#2563eb", "bge-m3": "#c2410c"}
-CHUNK_COLORS = {"fixed-100-20": "#0891b2", "fixed-150-30": "#16a34a", "fixed-200-40": "#ea580c"}
+CHUNK_COLORS = {
+    "fixed-100-20": "#0891b2", "fixed-150-30": "#16a34a", "fixed-200-40": "#ea580c",
+    "fixed-300-50": "#0891b2", "fixed-500-80": "#16a34a", "fixed-800-120": "#ea580c",
+}
 CHART_FILES = (
     "01_quality_latency.svg",
     "02_model_resources.svg",
@@ -195,38 +198,71 @@ def quality_color(score: float) -> str:
 
 def entropy_svg(rows: list[dict[str, Any]], weights_by_profile: dict[str, dict[str, float]]) -> str:
     profiles = ["低配估算", "办公PC估算", "高配估算"]
-    left, top, width, height = 140.0, 160.0, 1320.0, 580.0
-    ymin, ymax = min(row["entropy_score"] for row in rows), max(row["entropy_score"] for row in rows)
-    pad = (ymax - ymin) * 0.12 or 0.1
-    ymin, ymax = ymin - pad, ymax + pad
+    models = ["bge-small", "m3e-base", "bge-m3"]
+    left, top, width, height = 140.0, 220.0, 1320.0, 470.0
+    ymin, ymax = 0.0, 100.0
     sy = lambda value: top + height - (value - ymin) / (ymax - ymin) * height
     parts = []
     for index in range(6):
         y = top + height * index / 5
         value = ymax - (ymax - ymin) * index / 5
         parts.append(f'<line x1="{left}" y1="{y:.1f}" x2="{left+width}" y2="{y:.1f}" stroke="#e2e8f0"/>')
-        parts.append(f'<text x="{left-15}" y="{y+5:.1f}" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">{value:.3f}</text>')
+        parts.append(f'<text x="{left-15}" y="{y+5:.1f}" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">{value:.0f}</text>')
+    parts.append(f'<line x1="{left}" y1="{top}" x2="{left}" y2="{top+height}" stroke="#64748b"/>')
+    parts.append(f'<line x1="{left}" y1="{top+height}" x2="{left+width}" y2="{top+height}" stroke="#64748b"/>')
+    parts.append(f'<text x="42" y="{top+height/2}" transform="rotate(-90 42 {top+height/2})" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="16" font-weight="700" fill="#334155">档内效率熵权分（0–100）</text>')
+
+    def marker(x: float, y: float, top_k: int, color: str, title: str) -> str:
+        escaped = escape(title)
+        if top_k == 5:
+            return f'<polygon points="{x:.1f},{y-3.5:.1f} {x+3.5:.1f},{y:.1f} {x:.1f},{y+3.5:.1f} {x-3.5:.1f},{y:.1f}" fill="{color}" opacity="0.92"><title>{escaped}</title></polygon>'
+        if top_k == 10:
+            return f'<rect x="{x-3:.1f}" y="{y-3:.1f}" width="6" height="6" fill="{color}" opacity="0.92"><title>{escaped}</title></rect>'
+        return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.2" fill="{color}" opacity="0.92"><title>{escaped}</title></circle>'
+
     group_width = width / 3
     for group_index, profile in enumerate(profiles):
         start = left + group_index * group_width
         if group_index:
-            parts.append(f'<line x1="{start:.1f}" y1="{top}" x2="{start:.1f}" y2="{top+height}" stroke="#94a3b8" stroke-dasharray="5 5"/>')
-        parts.append(f'<text x="{start+group_width/2:.1f}" y="{top+height+45}" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="18" font-weight="700" fill="#334155">{profile}</text>')
+            parts.append(f'<line x1="{start:.1f}" y1="{top-42}" x2="{start:.1f}" y2="{top+height}" stroke="#94a3b8" stroke-dasharray="5 5"/>')
         group_rows = [row for row in rows if row["profile"] == profile]
-        for point_index, row in enumerate(group_rows):
-            x = start + 30 + point_index * (group_width - 60) / max(len(group_rows) - 1, 1)
-            y = sy(row["entropy_score"])
-            color = quality_color(row["quality_score"])
-            parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3.5" fill="{color}" opacity="0.9"/>')
-            parts.append(f'<text x="{x:.1f}" y="{y-8:.1f}" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="10" fill="#475569">K{row["top_k"]}</text>')
+        if group_rows:
+            badge_x = start + group_width / 2
+            title = f'{profile} · {group_rows[0]["ram_gib"]} GB · {group_rows[0]["torch_threads"]}线程'
+            parts.append(f'<rect x="{badge_x-120:.1f}" y="154" width="240" height="28" rx="14" fill="#ffffff" stroke="#cbd5e1"/>')
+            parts.append(f'<text x="{badge_x:.1f}" y="174" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="14" font-weight="700" fill="#334155">{escape(title)}</text>')
+        model_width = group_width / len(models)
+        for model_index, model in enumerate(models):
+            model_start = start + model_index * model_width
+            if model_index:
+                parts.append(f'<line x1="{model_start:.1f}" y1="{top-26}" x2="{model_start:.1f}" y2="{top+height}" stroke="#dbe4ee" stroke-dasharray="3 5"/>')
+            parts.append(f'<text x="{model_start+model_width/2:.1f}" y="208" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="12" font-weight="700" fill="{MODEL_COLORS[model]}">{model}</text>')
+            model_rows = sorted(
+                (row for row in group_rows if row.get("model", "bge-small") == model),
+                key=lambda row: (row["chunk_config"], int(row["top_k"])),
+            )
+            for point_index, row in enumerate(model_rows):
+                x = model_start + 12 + point_index * (model_width - 24) / max(len(model_rows) - 1, 1)
+                y = sy(row["entropy_score"])
+                color = quality_color(row["quality_score"])
+                point_title = f'{model} · {profile} · {row["chunk_config"].removeprefix("fixed-")} · K{row["top_k"]} · 效率 {row["entropy_score"]:.1f} · 质量 {row["quality_score"]:.1f}'
+                parts.append(marker(x, y, int(row["top_k"]), color, point_title))
+
+    parts.append('<text x="770" y="122" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#475569">标记：</text>')
+    for index, top_k in enumerate((3, 5, 10)):
+        x = 830 + index * 72
+        parts.append(marker(x, 118, top_k, "#475569", f"K={top_k}"))
+        parts.append(f'<text x="{x+8}" y="123" font-family="Microsoft YaHei, sans-serif" font-size="11" fill="#64748b">K={top_k}</text>')
     for index, score in enumerate((0, 25, 50, 75, 100)):
-        x = 1030 + index * 86
-        parts.append(f'<circle cx="{x}" cy="120" r="3.5" fill="{quality_color(score)}"/>')
-        parts.append(f'<text x="{x+8}" y="125" font-family="Microsoft YaHei, sans-serif" font-size="11" fill="#64748b">{score}</text>')
-    parts.append('<text x="900" y="125" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#475569">质量色：</text>')
+        x = 1160 + index * 64
+        parts.append(f'<circle cx="{x}" cy="118" r="3.2" fill="{quality_color(score)}"/>')
+        parts.append(f'<text x="{x+7}" y="123" font-family="Microsoft YaHei, sans-serif" font-size="10" fill="#64748b">{score}</text>')
+    parts.append('<text x="1070" y="123" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#475569">颜色=质量：</text>')
+    parts.append(f'<text x="{left+width/2}" y="724" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#475569">每个模型从左到右：300/50、500/80、800/120；每组依次为 K=3、K=5、K=10</text>')
+    parts.append(f'<text x="{left+width/2}" y="758" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="15" font-weight="700" fill="#334155">硬件配置档 → 模型 → 切分 → Top-K</text>')
     legend = "；".join(f"{profile}: " + ", ".join(f"{key}={value:.3f}" for key, value in weights.items()) for profile, weights in weights_by_profile.items())
-    parts.append(f'<text x="{left}" y="810" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#64748b">档内效率熵权：{escape(legend)}</text>')
-    return _svg_shell("熵权效率散点：三档配置 × 每档九个切分/Top-K 组合", "\n".join(parts), "纵轴=档内效率分；颜色=质量分；固定小点避免遮挡；不作跨档数值比较")
+    parts.append(f'<text x="{left}" y="835" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#64748b">档内效率熵权：{escape(legend)}</text>')
+    return _svg_shell("熵权效率散点：3 模型 × 3 硬件档 × 3 切分 × 3 Top-K", "\n".join(parts), "81 个实测组合；纵轴=档内效率分；颜色=质量分；形状=Top-K；跨硬件档分数不直接比较")
 
 
 def md_table(headers: list[str], rows: list[list[Any]]) -> str:
@@ -382,6 +418,7 @@ def build_report_data(session_dir: Path) -> dict[str, Any]:
         "storage_comparison": sorted(storage_rows, key=lambda item: (item["backend"], item["vector_count"], item["top_k"])),
         "storage_accuracy": {"result_overlap_mean": storage["summary"]["result_overlap_mean"], "exact_order_match_rate": storage["summary"]["exact_order_match_rate"]},
         "hardware_estimates": hardware_estimates,
+        "hardware_matrix_combination_count": hardware["summary"].get("matrix_combination_count", len(entropy_rows)),
         "hardware_profile_points": entropy_rows,
         "hardware_profile_resources": hardware["summary"]["resource_by_profile"],
         "entropy_weights_by_profile": weights_by_profile,
@@ -413,7 +450,8 @@ def write_charts(data: dict[str, Any], output_dir: Path) -> None:
 
     chunk_k3 = [row for row in data["chunk_comparison"] if row["top_k"] == 3]
     chunk_bars = [{"label": row["chunk_config"], "value": row["hybrid_quality"]["ndcg"], "value_label": f'{row["hybrid_quality"]["ndcg"]:.3f} / {row["latency"]["p95_ms"]:.1f}ms', "color": CHUNK_COLORS.get(row["chunk_config"], "#7c3aed")} for row in chunk_k3]
-    (output_dir / CHART_FILES[3]).write_text(bar_svg("切分方案对比", chunk_bars, "混合检索 nDCG@3（标签同时列 P95）", "bge-small；100/20、150/30、200/40 与结构化 200"), encoding="utf-8")
+    chunk_labels = "、".join(row["chunk_config"].removeprefix("fixed-") for row in chunk_k3)
+    (output_dir / CHART_FILES[3]).write_text(bar_svg("切分方案对比", chunk_bars, "混合检索 nDCG@3（标签同时列 P95）", f"bge-small；实测切分 {chunk_labels}"), encoding="utf-8")
 
     recommended = [row for row in data["chunk_comparison"] if row["chunk_config"] == data["recommended_fixed_chunk_config"]]
     topk_series = [
@@ -460,7 +498,7 @@ def report_markdown(data: dict[str, Any]) -> str:
         chunk_rows.append([row["chunk_config"], row["chunk_size"], row["overlap"], row["chunk_count"], row["top_k"], f(row["build_time_mean_ms"], 2), int(row["database_bytes_mean"]), f(row["latency"]["p95_ms"], 2), f(row["latency"]["mean_round_qps"], 2), f(q["hit_rate"]), f(q["mrr"]), f(q["recall"]), f(q["precision"]), f(q["ndcg"]), f(q["map"])])
     storage_rows = [[row["backend"], row["vector_count"], row["dimension"], row["top_k"], f(row["build_ms_mean"], 2), int(row["database_bytes_mean"]), f(row["p50_ms"], 3), f(row["p95_ms"], 3), f(row["p99_ms"], 3), f(row["mean_round_qps"], 2), row["total_samples"]] for row in data["storage_comparison"]]
     hardware_rows = [[item["model"], f(gib(item["model_cache_bytes"]), 3), f(mib(item["peak_private_bytes"]), 1), f(gib(item["memory_basis_bytes"]), 3), f(item["formula_required_gib"], 2), item["minimum_standard_ram_gib"], item["minimum_free_disk_gib"], item["measured_threads"], item["cpu_floor"]] for item in data["hardware_estimates"]]
-    entropy_rows = [[item["profile"], item["ram_gib"], item["torch_threads"], item["chunk_config"], item["top_k"], f(item["p50_ms"], 2), f(item["p95_ms"], 2), f(item["qps_sequential"], 2), f(item["recall"]), f(item["mrr"]), f(item["ndcg"]), f(item["quality_score"], 1), f(item["entropy_score"], 1)] for item in data["hardware_profile_points"]]
+    entropy_rows = [[item["profile"], item.get("model", "bge-small"), item["ram_gib"], item["torch_threads"], item["chunk_config"], item["top_k"], item.get("rounds", 1), item.get("sample_count", 34), f(item["p50_ms"], 2), f(item["p95_ms"], 2), f(item["qps_sequential"], 2), f(item["recall"]), f(item["mrr"]), f(item["ndcg"]), f(item["quality_score"], 1), f(item["entropy_score"], 1)] for item in data["hardware_profile_points"]]
     functional_rows = [[item["case_id"], item["description"], item["status"], f(item.get("duration_ms"), 2)] for item in data["functional_cases"]]
     bge = next(row for row in data["model_comparison"] if row["model"] == "bge-small" and row["top_k"] == 3)
     m3 = next(row for row in data["model_comparison"] if row["model"] == "bge-m3" and row["top_k"] == 3)
@@ -470,7 +508,12 @@ def report_markdown(data: dict[str, Any]) -> str:
     recommended_name = data["recommended_fixed_chunk_config"]
     recommended_k3 = next(row for row in data["chunk_comparison"] if row["chunk_config"] == recommended_name and row["top_k"] == 3)
     recommended_k5 = next(row for row in data["chunk_comparison"] if row["chunk_config"] == recommended_name and row["top_k"] == 5)
-    structure_k3 = next(row for row in data["chunk_comparison"] if row["chunk_config"] == "structure-200" and row["top_k"] == 3)
+    structure_k3 = next((row for row in data["chunk_comparison"] if row["chunk_config"] == "structure-200" and row["top_k"] == 3), None)
+    structure_recommendation = ""
+    if structure_k3 is not None:
+        structure_recommendation = f"| 结构质量备选 | bge-small；16 GB；8 线程；structure-200；K=3/5 | 本轮 structure-200 的 nDCG@3 {structure_k3['hybrid_quality']['ndcg']:.3f} 略高，但无 overlap，先作为备选 |\n"
+    fixed_chunks = [item for item in test_config["chunk_configs"] if item["strategy"] == "fixed"]
+    fixed_chunk_text = "、".join(f'{item["chunk_size"]}/{item["overlap"]}' for item in fixed_chunks)
     historical = data["historical_large_chunk_comparison"]
     historical_section = ""
     if historical:
@@ -496,6 +539,7 @@ def report_markdown(data: dict[str, Any]) -> str:
 - 环境：{env['cpu_model']}，{env['logical_cores']} 逻辑线程，{gib(env['ram_bytes']):.2f} GiB 内存，{env['os']}，CPU-only，电源计划“平衡”。
 - 完整性：{integrity['run_result_count']} 个运行结果、{integrity['error_count']} 条错误；检索性能样本 {integrity['retrieval_latency_samples']} 条、质量明细 {integrity['retrieval_quality_details']} 条；功能用例 {integrity['functional_pass_count']}/{integrity['functional_required_count']} 通过。
 - 多轮口径：冷启动 {test_config['cold_start_repetitions']} 次；批量嵌入每组 {test_config['batch_repetitions']} 次；热检索每个 K 为 {test_config['search_rounds']} 轮、每轮实际 340 请求；建库 {test_config['build_repetitions']} 次；存储查询每格 {test_config['storage']['rounds']} 轮 × {test_config['storage']['query_repetitions']} 次。
+- 硬件矩阵：{data['hardware_matrix_combination_count']} 个组合，每组合 {test_config.get('hardware_search_rounds', 1)} 轮 × {dataset['question_count']} 题；模型、线程档、切分和 Top-K 均写入逐请求记录。
 - 内存口径：报告保留资源采样时间序列和本轮观测峰值；峰值表示容量风险，不取均值。时间与 QPS 则报告多轮均值及 P50/P95/P99。
 - 性能测试顺序执行；每轮数据均保存在来源会话的 `run_result.json`，并由 `manifest.json`/`session_manifest.json` 给出哈希。无外部大模型调用，HTTP 只用于 `127.0.0.1` 本机 Python 嵌入进程通信。
 
@@ -525,7 +569,7 @@ bge-m3 健康检查实际报告 1024 维、CPU、14 线程；其 K=3 P95 是 bge
 
 ### 切分、建库、检索与 QPS
 
-切分长度按当前实现的“中文字符数”计。LangChain 官方中文分隔建议给出 100/20 的示例；Haystack 默认 200 以“词”为单位，RAGFlow 默认 512 以 token 为单位，三者不能直接等同。因此本轮不宣称存在统一标准，而以 100/20 为开源锚点，增加 150/30、200/40 两个 20% overlap 的单变量点，并用 structure-200 观察结构切分差异。
+切分长度按当前实现的“中文字符数”计。本轮按指定矩阵复测 {fixed_chunk_text}；三个值只代表本项目 fixed 切分参数，不与其他框架的词或 token 单位直接等同。
 
 ![切分对比](charts/{CHART_FILES[3]})
 
@@ -570,7 +614,7 @@ F01-F07 覆盖知识库、文档导入、真实嵌入、检索、持久化与异
 |---|---|---|
 | 轻量最低档 | bge-small；8 GB；至少 4 线程限额；{recommended_name}；K=3；sqlite-vec | 混合 MRR@3 {recommended_k3['hybrid_quality']['mrr']:.3f}、nDCG@3 {recommended_k3['hybrid_quality']['ndcg']:.3f}，P95 {recommended_k3['latency']['p95_ms']:.2f} ms |
 | 典型办公档 | bge-small；16 GB；8 线程；{recommended_name}；K=5；sqlite-vec | Recall@5 {recommended_k5['hybrid_quality']['recall']:.3f}、nDCG@5 {recommended_k5['hybrid_quality']['ndcg']:.3f}，并给前端与后续问答保留内存余量 |
-| 结构质量备选 | bge-small；16 GB；8 线程；structure-200；K=3/5 | 本轮 structure-200 的 nDCG@3 {structure_k3['hybrid_quality']['ndcg']:.3f} 略高，但无 overlap 且未做三模型横评，先作为备选 |
+{structure_recommendation}| 全矩阵实验档 | 三模型；4/8/14 线程；{fixed_chunk_text}；K=3/5/10 | 用 81 组实测结果比较模型、线程档、切分与 Top-K，不把线程限额冒充三台物理机器 |
 | 大模型实验档 | bge-m3；16 GB；14 线程级 CPU；{baseline_name}；K=5/10 | 仅在可接受更高延迟和模型占用时采用；本轮没有证明它比 bge-small 更优 |
 
 后续对接 AI 时只把已验证的本地检索层作为输入接口，单独测生成模型的首 token、吞吐、上下文长度与内存；本报告不包含、也不推断外部大模型性能。
@@ -579,9 +623,9 @@ F01-F07 覆盖知识库、文档导入、真实嵌入、检索、持久化与异
 
 ![熵权辅助散点](charts/{CHART_FILES[7]})
 
-{md_table(['配置档','RAM GB','线程','切分','K','P50 ms','P95 ms','QPS','Recall','MRR','nDCG','质量分','档内效率分'], entropy_rows)}
+{md_table(['配置档','模型','RAM GB','线程','切分','K','轮数','样本数','P50 ms','P95 ms','QPS','Recall','MRR','nDCG','质量分','档内效率分'], entropy_rows)}
 
-纵轴熵权只使用效率指标 P50、P95、QPS，并在每个档位内部单独计算；颜色质量分使用 min-max 后等权的 Recall、MRR、nDCG。档内权重为 `{json.dumps(data['entropy_weights_by_profile'], ensure_ascii=False)}`。每个配置区间正好 9 个小散点（三种切分 × 三个 Top-K），只作辅助聚合，跨档分数不可直接比较。
+纵轴熵权只使用效率指标 P50、P95、QPS，并在每个硬件档内部对 27 个点单独计算；颜色质量分使用 min-max 后等权的 Recall、MRR、nDCG。档内权重为 `{json.dumps(data['entropy_weights_by_profile'], ensure_ascii=False)}`。全图共 81 个实测点（三模型 × 三线程档 × 三切分 × 三 Top-K），颜色表示质量、形状表示 Top-K、横向子区间明确标出模型；只作辅助聚合，跨硬件档分数不可直接比较。
 
 ## 局限与复现
 

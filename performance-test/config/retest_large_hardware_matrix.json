@@ -1,0 +1,39 @@
+{
+  "schema_version": "2.1",
+  "random_seed": 20260908,
+  "resource_sample_interval_ms": 500,
+  "models": ["bge-small", "m3e-base", "bge-m3"],
+  "model_order_by_repetition": [
+    ["bge-small", "m3e-base", "bge-m3"],
+    ["m3e-base", "bge-m3", "bge-small"],
+    ["bge-m3", "bge-small", "m3e-base"]
+  ],
+  "cold_start_repetitions": 5,
+  "warmup_requests": 30,
+  "batch_sizes": [1, 8, 32],
+  "batch_repetitions": 5,
+  "top_k": [3, 5, 10],
+  "search_rounds": 3,
+  "minimum_requests_per_round": 334,
+  "baseline_chunk_config": "fixed-500-80",
+  "chunk_configs": [
+    {"name": "fixed-300-50", "strategy": "fixed", "chunk_size": 300, "overlap": 50},
+    {"name": "fixed-500-80", "strategy": "fixed", "chunk_size": 500, "overlap": 80},
+    {"name": "fixed-800-120", "strategy": "fixed", "chunk_size": 800, "overlap": 120}
+  ],
+  "build_repetitions": 3,
+  "storage": {
+    "chunk_counts": [100, 1000, 10000],
+    "dimension": 512,
+    "top_k": [3, 5, 10],
+    "query_repetitions": 100,
+    "rounds": 3
+  },
+  "hardware_models": ["bge-small", "m3e-base", "bge-m3"],
+  "hardware_search_rounds": 3,
+  "hardware_profiles": [
+    {"name": "低配估算", "ram_gib": 8, "torch_threads": 4},
+    {"name": "办公PC估算", "ram_gib": 16, "torch_threads": 8},
+    {"name": "高配估算", "ram_gib": 32, "torch_threads": 14}
+  ]
+}

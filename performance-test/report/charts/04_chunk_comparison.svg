@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#f8fafc"/>
+<text x="80" y="72" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#0f172a">切分方案对比</text>
+<text x="80" y="108" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#64748b">bge-small；300/50、500/80、800/120 与结构化 800</text>
+<line x1="310.0" y1="130.0" x2="310.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="310.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.00</text>
+<line x1="542.0" y1="130.0" x2="542.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="542.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.18</text>
+<line x1="774.0" y1="130.0" x2="774.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="774.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.36</text>
+<line x1="1006.0" y1="130.0" x2="1006.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1006.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.54</text>
+<line x1="1238.0" y1="130.0" x2="1238.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1238.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.71</text>
+<line x1="1470.0" y1="130.0" x2="1470.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1470.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.89</text>
+<text x="292.0" y="237.5" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">fixed-300-50</text>
+<rect x="310.0" y="210.5" width="999.5" height="44.0" rx="5" fill="#0891b2"/>
+<text x="1319.5" y="237.5" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">0.770 / 25.8ms</text>
+<text x="292.0" y="402.5" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">fixed-500-80</text>
+<rect x="310.0" y="375.5" width="1100.9" height="44.0" rx="5" fill="#16a34a"/>
+<text x="1420.9" y="402.5" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">0.848 / 26.3ms</text>
+<text x="292.0" y="567.5" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">fixed-800-120</text>
+<rect x="310.0" y="540.5" width="1160.0" height="44.0" rx="5" fill="#ea580c"/>
+<text x="1480.0" y="567.5" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">0.893 / 24.0ms</text>
+<text x="292.0" y="732.5" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">structure-800</text>
+<rect x="310.0" y="705.5" width="980.2" height="44.0" rx="5" fill="#7c3aed"/>
+<text x="1300.2" y="732.5" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">0.755 / 29.2ms</text>
+<text x="890.0" y="882" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#334155">混合检索 nDCG@3（标签同时列 P95）</text>
+</svg>

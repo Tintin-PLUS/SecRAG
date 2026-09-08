@@ -708,50 +708,73 @@ def retrieval_results(session_dir: Path) -> list[dict[str, Any]]:
     return values
 
 
+def hardware_matrix_cases(config: dict[str, Any]) -> list[dict[str, Any]]:
+    models = config.get("hardware_models", ["bge-small"])
+    chunks = [item for item in config["chunk_configs"] if item["strategy"] == "fixed"]
+    return [
+        {"model": model, "profile": profile, "chunk_config": chunk, "top_k": int(top_k)}
+        for profile in config["hardware_profiles"]
+        for model in models
+        for chunk in chunks
+        for top_k in config["top_k"]
+    ]
+
+
 def run_hardware_profiles(session_dir: Path, config: dict[str, Any], documents: list[dict[str, str]], queries: list[dict[str, Any]], environment: dict[str, Any]) -> Path:
     run_dir = session_dir / "30-hardware-profile-estimates"
+    models = config.get("hardware_models", ["bge-small"])
     numeric_chunks = [item for item in config["chunk_configs"] if item["strategy"] == "fixed"]
+    rounds = int(config.get("hardware_search_rounds", 1))
     dataset = corpus_descriptor(documents, queries)
-    payload = base_result("hardware-profiles", "thread_capped_hardware_estimate", {"profiles": config["hardware_profiles"], "chunk_configs": numeric_chunks, "top_k": config["top_k"], "note": "同一台H1电脑上的线程限制实测；RAM档位仅用于可行性估算，不代表三台真实硬件"}, dataset, environment)
+    payload = base_result("hardware-profiles", "thread_capped_hardware_estimate", {"models": models, "profiles": config["hardware_profiles"], "chunk_configs": numeric_chunks, "top_k": config["top_k"], "rounds": rounds, "expected_combinations": len(hardware_matrix_cases(config)), "note": "同一台H1电脑上的线程限制实测；RAM档位仅用于可行性估算，不代表三台真实硬件"}, dataset, environment)
     interval = int(config["resource_sample_interval_ms"])
     sample_id = 0
     for profile_index, profile in enumerate(config["hardware_profiles"]):
-        port = 8940 + profile_index
-        process, health, _ = start_service("bge-small", port, run_dir / "artifacts" / f"{profile['torch_threads']}-threads.log", int(profile["torch_threads"]))
-        monitor, output, stop_file = monitor_start(run_dir / f"profile-{profile_index + 1}", [os.getpid(), process.pid], interval)
-        try:
-            warm_samples = warmup(port, "bge-small", int(config["warmup_requests"]), queries)
-            for chunk_config in numeric_chunks:
-                chunks = make_chunks(documents, chunk_config)
-                vectors, _ = embed_chunks(port, "bge-small", chunks)
-                for query in queries:
-                    query_vectors, response, embed_ms = request_embedding(port, "bge-small", [query["query"]])
-                    for top_k in config["top_k"]:
-                        results, search_ms = hybrid_search(query["query"], query_vectors[0], chunks, vectors, int(top_k))
-                        relevance = [is_relevant(item["content"], query["must_contain"], query.get("any_of", [])) for item in results]
-                        total_relevant = sum(is_relevant(item["content"], query["must_contain"], query.get("any_of", [])) for item in chunks)
-                        sample_id += 1
-                        payload["latency_samples"].append({"sample_id": sample_id, "operation": "profile_search", "profile": profile["name"], "ram_gib_assumption": profile["ram_gib"], "torch_threads": profile["torch_threads"], "chunk_config": chunk_config["name"], "top_k": top_k, "query_id": query["id"], "latency_ms": embed_ms + search_ms, "embedding_server_ms": response["encode_ms"], "search_ms": search_ms, "success": True, **full_quality_metrics(relevance, total_relevant)})
-            payload["case_results"].append({"case_id": profile["name"], "status": "PASS", "actual": {"health": health, "warmup_samples": warm_samples}})
-        finally:
-            samples, profile_resource = monitor_finish(monitor, output, stop_file, interval)
-            for sample in samples:
-                sample["profile"] = profile["name"]
-            payload["resource_samples"].extend(samples)
-            payload["case_results"].append({"case_id": f"{profile['name']}-resource", "status": "PASS", "actual": profile_resource})
-            stop_service(process)
+        for model_index, model in enumerate(models):
+            port = 8940 + profile_index * len(models) + model_index
+            label = f"{profile['name']}-{model}"
+            process, health, _ = start_service(model, port, run_dir / "artifacts" / f"{profile['torch_threads']}-threads-{model}.log", int(profile["torch_threads"]))
+            monitor, output, stop_file = monitor_start(run_dir / f"profile-{profile_index + 1}-{model}", [os.getpid(), process.pid], interval)
+            try:
+                warm_samples = warmup(port, model, int(config["warmup_requests"]), queries)
+                for chunk_index, chunk_config in enumerate(numeric_chunks):
+                    chunks = make_chunks(documents, chunk_config)
+                    vectors, _ = embed_chunks(port, model, chunks)
+                    for round_number in range(1, rounds + 1):
+                        sequence = list(queries)
+                        random.Random(int(config["random_seed"]) + profile_index * 10000 + model_index * 1000 + chunk_index * 100 + round_number).shuffle(sequence)
+                        for query in sequence:
+                            query_vectors, response, embed_ms = request_embedding(port, model, [query["query"]])
+                            total_relevant = sum(is_relevant(item["content"], query["must_contain"], query.get("any_of", [])) for item in chunks)
+                            for top_k in config["top_k"]:
+                                results, search_ms = hybrid_search(query["query"], query_vectors[0], chunks, vectors, int(top_k))
+                                relevance = [is_relevant(item["content"], query["must_contain"], query.get("any_of", [])) for item in results]
+                                sample_id += 1
+                                payload["latency_samples"].append({"sample_id": sample_id, "operation": "profile_search", "model": model, "profile": profile["name"], "ram_gib_assumption": profile["ram_gib"], "torch_threads": profile["torch_threads"], "chunk_config": chunk_config["name"], "top_k": top_k, "round": round_number, "query_id": query["id"], "latency_ms": embed_ms + search_ms, "embedding_server_ms": response["encode_ms"], "search_ms": search_ms, "success": True, **full_quality_metrics(relevance, total_relevant)})
+                payload["case_results"].append({"case_id": label, "status": "PASS", "actual": {"health": health, "warmup_samples": warm_samples}})
+            finally:
+                samples, profile_resource = monitor_finish(monitor, output, stop_file, interval)
+                for sample in samples:
+                    sample["profile"] = profile["name"]
+                    sample["model"] = model
+                payload["resource_samples"].extend(samples)
+                payload["case_results"].append({"case_id": f"{label}-resource", "status": "PASS", "actual": profile_resource})
+                stop_service(process)
     points = []
-    for profile in config["hardware_profiles"]:
-        for chunk_config in numeric_chunks:
-            for top_k in config["top_k"]:
-                items = [item for item in payload["latency_samples"] if item["profile"] == profile["name"] and item["chunk_config"] == chunk_config["name"] and item["top_k"] == top_k]
-                latency_values = [item["latency_ms"] for item in items]
-                points.append({"profile": profile["name"], "ram_gib": profile["ram_gib"], "torch_threads": profile["torch_threads"], "chunk_config": chunk_config["name"], "top_k": top_k, "p50_ms": percentile(latency_values, 0.50), "p95_ms": percentile(latency_values, 0.95), "qps_sequential": 1000.0 / fmean(latency_values), "hit_rate": fmean(item["hit"] for item in items), "mrr": fmean(item["reciprocal_rank"] for item in items), "recall": fmean(item["recall"] for item in items), "ndcg": fmean(item["ndcg"] for item in items)})
+    for case in hardware_matrix_cases(config):
+        model, profile, chunk_config, top_k = case["model"], case["profile"], case["chunk_config"], case["top_k"]
+        items = [item for item in payload["latency_samples"] if item["model"] == model and item["profile"] == profile["name"] and item["chunk_config"] == chunk_config["name"] and item["top_k"] == top_k]
+        latency_values = [item["latency_ms"] for item in items]
+        points.append({"model": model, "profile": profile["name"], "ram_gib": profile["ram_gib"], "torch_threads": profile["torch_threads"], "chunk_config": chunk_config["name"], "top_k": top_k, "rounds": rounds, "sample_count": len(items), "p50_ms": percentile(latency_values, 0.50), "p95_ms": percentile(latency_values, 0.95), "qps_sequential": 1000.0 / fmean(latency_values), "hit_rate": fmean(item["hit"] for item in items), "mrr": fmean(item["reciprocal_rank"] for item in items), "recall": fmean(item["recall"] for item in items), "ndcg": fmean(item["ndcg"] for item in items)})
     peak_by_profile = {}
+    peak_by_profile_model = {}
     for profile in config["hardware_profiles"]:
         samples = [sample for sample in payload["resource_samples"] if sample["profile"] == profile["name"]]
         peak_by_profile[profile["name"]] = resource_summary(samples)
-    return finish_result(run_dir, payload, {"entropy_points": points, "resource_by_profile": peak_by_profile, "minimum_ram_formula": "next_standard_capacity(4 GiB OS reserve + 1.5 * measured peak stack Working Set)"})
+        for model in models:
+            model_samples = [sample for sample in samples if sample["model"] == model]
+            peak_by_profile_model[f"{profile['name']}/{model}"] = resource_summary(model_samples)
+    return finish_result(run_dir, payload, {"matrix_combination_count": len(points), "entropy_points": points, "resource_by_profile": peak_by_profile, "resource_by_profile_model": peak_by_profile_model, "minimum_ram_formula": "next_standard_capacity(4 GiB OS reserve + 1.5 * measured peak stack Working Set)"})
 
 
 def run_functional(session_dir: Path, config: dict[str, Any], environment: dict[str, Any]) -> Path:

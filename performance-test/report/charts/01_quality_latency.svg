@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#f8fafc"/>
+<text x="80" y="72" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#0f172a">模型质量—时延权衡</text>
+<text x="80" y="108" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#64748b">固定切分 500/80；原始 34 题；圆点半径 4px</text>
+<line x1="120.0" y1="150.0" x2="120.0" y2="770.0" stroke="#e2e8f0"/>
+<line x1="120.0" y1="150.0" x2="1480.0" y2="150.0" stroke="#e2e8f0"/>
+<text x="120.0" y="798.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">19.05</text>
+<text x="104.0" y="155.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.904</text>
+<line x1="392.0" y1="150.0" x2="392.0" y2="770.0" stroke="#e2e8f0"/>
+<line x1="120.0" y1="274.0" x2="1480.0" y2="274.0" stroke="#e2e8f0"/>
+<text x="392.0" y="798.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">40.08</text>
+<text x="104.0" y="279.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.892</text>
+<line x1="664.0" y1="150.0" x2="664.0" y2="770.0" stroke="#e2e8f0"/>
+<line x1="120.0" y1="398.0" x2="1480.0" y2="398.0" stroke="#e2e8f0"/>
+<text x="664.0" y="798.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">61.11</text>
+<text x="104.0" y="403.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.879</text>
+<line x1="936.0" y1="150.0" x2="936.0" y2="770.0" stroke="#e2e8f0"/>
+<line x1="120.0" y1="522.0" x2="1480.0" y2="522.0" stroke="#e2e8f0"/>
+<text x="936.0" y="798.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">82.14</text>
+<text x="104.0" y="527.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.867</text>
+<line x1="1208.0" y1="150.0" x2="1208.0" y2="770.0" stroke="#e2e8f0"/>
+<line x1="120.0" y1="646.0" x2="1480.0" y2="646.0" stroke="#e2e8f0"/>
+<text x="1208.0" y="798.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">103.17</text>
+<text x="104.0" y="651.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.854</text>
+<line x1="1480.0" y1="150.0" x2="1480.0" y2="770.0" stroke="#e2e8f0"/>
+<line x1="120.0" y1="770.0" x2="1480.0" y2="770.0" stroke="#e2e8f0"/>
+<text x="1480.0" y="798.0" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">124.21</text>
+<text x="104.0" y="775.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.841</text>
+<line x1="120.0" y1="770.0" x2="1480.0" y2="770.0" stroke="#334155" stroke-width="2"/>
+<line x1="120.0" y1="150.0" x2="120.0" y2="770.0" stroke="#334155" stroke-width="2"/>
+<circle cx="213.8" cy="710.0" r="4" fill="#0f766e" opacity="0.88"/>
+<text x="221.8" y="702.0" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#334155">bge-small K3</text>
+<circle cx="222.3" cy="593.7" r="4" fill="#0f766e" opacity="0.88"/>
+<text x="230.3" y="585.7" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#334155">bge-small K5</text>
+<circle cx="262.1" cy="218.9" r="4" fill="#0f766e" opacity="0.88"/>
+<text x="270.1" y="210.9" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#334155">bge-small K10</text>
+<circle cx="544.7" cy="701.1" r="4" fill="#2563eb" opacity="0.88"/>
+<text x="552.7" y="693.1" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#334155">m3e-base K3</text>
+<circle cx="578.6" cy="685.6" r="4" fill="#2563eb" opacity="0.88"/>
+<text x="586.6" y="677.6" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#334155">m3e-base K5</text>
+<circle cx="630.0" cy="506.2" r="4" fill="#2563eb" opacity="0.88"/>
+<text x="638.0" y="498.2" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#334155">m3e-base K10</text>
+<circle cx="1332.5" cy="454.1" r="4" fill="#c2410c" opacity="0.88"/>
+<text x="1340.5" y="446.1" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#334155">bge-m3 K3</text>
+<circle cx="1274.6" cy="391.2" r="4" fill="#c2410c" opacity="0.88"/>
+<text x="1282.6" y="383.2" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#334155">bge-m3 K5</text>
+<circle cx="1386.2" cy="210.0" r="4" fill="#c2410c" opacity="0.88"/>
+<text x="1394.2" y="202.0" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#334155">bge-m3 K10</text>
+<text x="800.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#334155">P95 端到端本地检索时延（ms）</text>
+<text x="34" y="460.0" transform="rotate(-90 34 460.0)" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#334155">混合检索 nDCG@K</text>
+</svg>

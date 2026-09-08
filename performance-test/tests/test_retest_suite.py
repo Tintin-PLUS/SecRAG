@@ -9,6 +9,7 @@ sys.path.insert(0, str(SCRIPTS))
 
 from retest_suite import (  # noqa: E402
     DOCUMENTS_DIR,
+    hardware_matrix_cases,
     load_documents,
     load_queries,
     minimum_ram_gib,
@@ -57,6 +58,20 @@ class RetestSuiteTests(unittest.TestCase):
                 {"name": "fixed-200-40", "strategy": "fixed", "chunk_size": 200, "overlap": 40},
                 {"name": "structure-200", "strategy": "structure", "chunk_size": 200, "overlap": 0},
             ],
+        )
+
+    def test_large_hardware_matrix_has_eighty_one_distinct_combinations(self):
+        config_path = Path(__file__).resolve().parents[1] / "config" / "retest_large_hardware_matrix.json"
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+
+        cases = hardware_matrix_cases(config)
+
+        self.assertEqual(len(cases), 81)
+        self.assertEqual(len({(case["model"], case["profile"]["name"], case["chunk_config"]["name"], case["top_k"]) for case in cases}), 81)
+        self.assertEqual(config["hardware_search_rounds"], 3)
+        self.assertEqual(
+            [item["name"] for item in config["chunk_configs"]],
+            ["fixed-300-50", "fixed-500-80", "fixed-800-120"],
         )
 
 

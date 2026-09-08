@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#f8fafc"/>
+<text x="80" y="72" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#0f172a">离线与本地闭环验证</text>
+<text x="80" y="108" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#64748b">无外部大模型；本地文件、SQLite、日志与离线检索闭环</text>
+<line x1="310.0" y1="130.0" x2="310.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="310.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.00</text>
+<line x1="542.0" y1="130.0" x2="542.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="542.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">1.40</text>
+<line x1="774.0" y1="130.0" x2="774.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="774.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">2.80</text>
+<line x1="1006.0" y1="130.0" x2="1006.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1006.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">4.20</text>
+<line x1="1238.0" y1="130.0" x2="1238.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1238.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">5.60</text>
+<line x1="1470.0" y1="130.0" x2="1470.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1470.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">7.00</text>
+<text x="292.0" y="265.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">功能 F01-F07</text>
+<rect x="310.0" y="238.0" width="1160.0" height="44.0" rx="5" fill="#2563eb"/>
+<text x="1480.0" y="265.0" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">7/7 PASS</text>
+<text x="292.0" y="485.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">本地化 L01-L07</text>
+<rect x="310.0" y="458.0" width="1160.0" height="44.0" rx="5" fill="#7c3aed"/>
+<text x="1480.0" y="485.0" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">7/7 PASS</text>
+<text x="292.0" y="705.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">增量 U01-U07</text>
+<rect x="310.0" y="678.0" width="1160.0" height="44.0" rx="5" fill="#16a34a"/>
+<text x="1480.0" y="705.0" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">7/7 PASS</text>
+<text x="890.0" y="882" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#334155">通过用例数</text>
+</svg>

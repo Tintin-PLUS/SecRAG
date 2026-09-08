@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<rect width="1600" height="900" fill="#f8fafc"/>
+<text x="80" y="72" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#0f172a">增量更新闭环用例耗时</text>
+<text x="80" y="108" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#64748b">U01 新增、U02 修改、U03 删除、U04 连续写、U05 异常文件、U06 重启、U07 手动补偿</text>
+<line x1="310.0" y1="130.0" x2="310.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="310.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">0.00</text>
+<line x1="542.0" y1="130.0" x2="542.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="542.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">153.29</text>
+<line x1="774.0" y1="130.0" x2="774.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="774.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">306.58</text>
+<line x1="1006.0" y1="130.0" x2="1006.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1006.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">459.87</text>
+<line x1="1238.0" y1="130.0" x2="1238.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1238.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">613.16</text>
+<line x1="1470.0" y1="130.0" x2="1470.0" y2="810.0" stroke="#e2e8f0"/>
+<text x="1470.0" y="842" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">766.45</text>
+<text x="292.0" y="202.1" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">U01</text>
+<rect x="310.0" y="175.1" width="2.4" height="44.0" rx="5" fill="#0f766e"/>
+<text x="322.4" y="202.1" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">1.59 ms</text>
+<text x="292.0" y="296.4" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">U02</text>
+<rect x="310.0" y="269.4" width="2.8" height="44.0" rx="5" fill="#0f766e"/>
+<text x="322.8" y="296.4" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">1.84 ms</text>
+<text x="292.0" y="390.7" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">U03</text>
+<rect x="310.0" y="363.7" width="0.8" height="44.0" rx="5" fill="#0f766e"/>
+<text x="320.8" y="390.7" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">0.54 ms</text>
+<text x="292.0" y="485.0" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">U04</text>
+<rect x="310.0" y="458.0" width="1160.0" height="44.0" rx="5" fill="#0f766e"/>
+<text x="1480.0" y="485.0" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">766.45 ms</text>
+<text x="292.0" y="579.3" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">U05</text>
+<rect x="310.0" y="552.3" width="3.2" height="44.0" rx="5" fill="#0f766e"/>
+<text x="323.2" y="579.3" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">2.08 ms</text>
+<text x="292.0" y="673.6" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">U06</text>
+<rect x="310.0" y="646.6" width="47.3" height="44.0" rx="5" fill="#0f766e"/>
+<text x="367.3" y="673.6" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">31.23 ms</text>
+<text x="292.0" y="767.9" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="15" fill="#334155">U07</text>
+<rect x="310.0" y="740.9" width="3.0" height="44.0" rx="5" fill="#0f766e"/>
+<text x="323.0" y="767.9" font-family="Microsoft YaHei, sans-serif" font-size="14" fill="#0f172a">1.98 ms</text>
+<text x="890.0" y="882" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#334155">用例耗时（ms；无独立计时记为 0）</text>
+</svg>
